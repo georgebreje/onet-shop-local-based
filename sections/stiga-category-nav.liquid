@@ -1,0 +1,807 @@
+{% comment %}
+  stiga-category-nav.liquid
+
+  Desktop (≥ 990 px):
+    A slim nav bar with a single "Toate categoriile" trigger.
+    Clicking it opens a full-width two-panel mega-menu:
+      • Left  — vertical list of every top-level category; hover switches the right panel.
+      • Right — grid of subcategory image cards for the active category.
+
+  Mobile (< 990 px):
+    A full-width trigger bar that opens a right-side sheet drawer.
+    Each top-level category is an accordion item with its subcategories listed below.
+
+  Data source: linklists['stiga-categorii'] — never hardcoded.
+{% endcomment %}
+
+{%- assign stiga_menu = linklists['stiga-categorii'] -%}
+{%- if stiga_menu == blank or stiga_menu.links.size == 0 -%}
+  {%- comment -%} Menu handle not found — render nothing. {%- endcomment -%}
+{%- else -%}
+
+<nav
+  class="snav color-{{ section.settings.color_scheme }}"
+  id="snav"
+  aria-label="Navigare categorii produse"
+>
+
+  {%- comment -%}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ DESKTOP BAR ━━━━━{%- endcomment -%}
+  <div class="snav__bar" aria-hidden="true">
+    <div class="snav__bar-inner">
+      <button
+        class="snav__trigger"
+        type="button"
+        aria-haspopup="true"
+        aria-expanded="false"
+        aria-controls="snav-mega"
+      >
+        {%- comment -%} 2×2 grid icon {%- endcomment -%}
+        <svg class="snav__trigger-icon" width="15" height="15" viewBox="0 0 15 15" fill="currentColor" aria-hidden="true">
+          <rect x="0"   y="0"   width="6.5" height="6.5" rx="1.2"/>
+          <rect x="8.5" y="0"   width="6.5" height="6.5" rx="1.2"/>
+          <rect x="0"   y="8.5" width="6.5" height="6.5" rx="1.2"/>
+          <rect x="8.5" y="8.5" width="6.5" height="6.5" rx="1.2"/>
+        </svg>
+        <span>Toate categoriile</span>
+        <svg class="snav__trigger-caret" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+          <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    {%- comment -%}────────────── TWO-PANEL MEGA-MENU ──────────────{%- endcomment -%}
+    <div class="snav__mega" id="snav-mega" aria-hidden="true">
+      <div class="snav__mega-inner">
+
+        {%- comment -%} Left column — category list {%- endcomment -%}
+        <ul class="snav__cats" role="list">
+          {%- for link in stiga_menu.links -%}
+            <li class="snav__cat{% if forloop.first %} snav__cat--active{% endif %}" data-snav-cat="{{ forloop.index0 }}">
+              <a
+                class="snav__cat-link"
+                href="{{ link.url }}"
+                data-snav-cat-idx="{{ forloop.index0 }}"
+              >
+                <span>{{- link.title -}}</span>
+                {%- if link.links.size > 0 -%}
+                  <svg class="snav__cat-arrow" width="5" height="9" viewBox="0 0 5 9" fill="none" aria-hidden="true">
+                    <path d="M1 1l3 3.5L1 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                {%- endif -%}
+              </a>
+            </li>
+          {%- endfor -%}
+        </ul>
+
+        {%- comment -%} Right column — subcategory panels {%- endcomment -%}
+        <div class="snav__subs">
+          {%- for link in stiga_menu.links -%}
+            <div
+              class="snav__sub{% if forloop.first %} snav__sub--active{% endif %}"
+              data-snav-panel="{{ forloop.index0 }}"
+              aria-hidden="{{ forloop.first | map: 'false' | default: 'true' }}"
+            >
+              {%- if link.links.size > 0 -%}
+                <ul class="snav__sub-grid" role="list">
+                  {%- for child in link.links -%}
+                    <li>
+                      <a class="snav__sub-card" href="{{ child.url }}">
+                        <div class="snav__sub-img-wrap">
+                          {%- if child.object.image -%}
+                            {{-
+                              child.object.image
+                              | image_url: width: 260
+                              | image_tag:
+                                loading: 'lazy',
+                                class: 'snav__sub-img',
+                                widths: '130, 260',
+                                sizes: '130px'
+                            -}}
+                          {%- else -%}
+                            <div class="snav__sub-img snav__sub-img--empty"></div>
+                          {%- endif -%}
+                        </div>
+                        <span class="snav__sub-name">{{- child.title -}}</span>
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+              <a class="snav__sub-all" href="{{ link.url }}">
+                Toate {{ link.title | downcase }}
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M2.5 6h7m-3-3l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          {%- endfor -%}
+        </div>
+
+      </div>
+    </div>
+  </div>{%- comment -%} end .snav__bar {%- endcomment -%}
+
+
+  {%- comment -%}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ MOBILE BAR ━━━━━{%- endcomment -%}
+  <div class="snav__mob-bar" aria-hidden="true">
+    <button
+      class="snav__mob-btn"
+      type="button"
+      aria-expanded="false"
+      aria-controls="snav-sheet"
+    >
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="currentColor" aria-hidden="true">
+        <rect x="0"   y="0"   width="6.5" height="6.5" rx="1.2"/>
+        <rect x="8.5" y="0"   width="6.5" height="6.5" rx="1.2"/>
+        <rect x="0"   y="8.5" width="6.5" height="6.5" rx="1.2"/>
+        <rect x="8.5" y="8.5" width="6.5" height="6.5" rx="1.2"/>
+      </svg>
+      <span>Toate categoriile</span>
+      <svg class="snav__mob-caret" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+        <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  {%- comment -%}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ MOBILE SHEET ━━━━{%- endcomment -%}
+  <div
+    class="snav-sheet"
+    id="snav-sheet"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Categorii"
+    aria-hidden="true"
+  >
+    <div class="snav-sheet__hd">
+      <span class="snav-sheet__title">Categorii</span>
+      <button class="snav-sheet__close" type="button" aria-label="Închide meniul categoriilor">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <ul class="snav-sheet__list" role="list">
+      {%- for link in stiga_menu.links -%}
+        <li class="snav-sheet__item">
+          {%- if link.links.size > 0 -%}
+            <button
+              class="snav-sheet__acc"
+              type="button"
+              aria-expanded="false"
+              aria-controls="snav-acc-{{ forloop.index }}"
+            >
+              <span>{{- link.title -}}</span>
+              <svg class="snav-sheet__chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <ul class="snav-sheet__sub" id="snav-acc-{{ forloop.index }}" role="list" hidden>
+              <li>
+                <a class="snav-sheet__link snav-sheet__link--all" href="{{ link.url }}">
+                  Toate {{ link.title | downcase }}
+                </a>
+              </li>
+              {%- for child in link.links -%}
+                <li>
+                  <a class="snav-sheet__link snav-sheet__link--child" href="{{ child.url }}">
+                    {{- child.title -}}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- else -%}
+            <a class="snav-sheet__link" href="{{ link.url }}">{{- link.title -}}</a>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+
+  <div class="snav-overlay" aria-hidden="true"></div>
+
+</nav>
+
+{%- endif -%}
+
+
+{% stylesheet %}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ BASE */
+
+.snav {
+  position: relative;
+  /* Sit above page content; below the main header which controls its own z-index */
+  z-index: 90;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ DESKTOP BAR */
+
+.snav__bar {
+  display: none; /* shown via @media below */
+  border-top: 1px solid var(--color-border, rgba(0,0,0,.08));
+}
+
+.snav__bar-inner {
+  display: flex;
+  align-items: center;
+  max-width: var(--page-width, 1440px);
+  margin-inline: auto;
+  padding-inline: var(--page-margin, 20px);
+  height: 44px;
+}
+
+/* ── Trigger button ── */
+.snav__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  height: 32px;
+  background: transparent;
+  border: 1.5px solid var(--color-border, rgba(0,0,0,.15));
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.snav__trigger:hover,
+.snav__trigger[aria-expanded="true"] {
+  background: var(--color-primary, #000);
+  border-color: var(--color-primary, #000);
+  color: var(--color-primary-text, #fff);
+}
+
+.snav__trigger-icon {
+  flex-shrink: 0;
+}
+
+.snav__trigger-caret {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.snav__trigger[aria-expanded="true"] .snav__trigger-caret {
+  transform: rotate(180deg);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ MEGA-MENU */
+
+.snav__mega {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--color-background, #fff);
+  border-top: 1px solid var(--color-border, rgba(0,0,0,.08));
+  border-bottom: 1px solid var(--color-border, rgba(0,0,0,.08));
+  box-shadow: 0 16px 48px rgba(0,0,0,.10);
+  z-index: 100;
+  /* Animation */
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.snav__mega[aria-hidden="false"] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.snav__mega-inner {
+  display: flex;
+  max-width: var(--page-width, 1440px);
+  margin-inline: auto;
+  padding-inline: var(--page-margin, 20px);
+  min-height: 320px;
+  max-height: 70vh;
+}
+
+/* ── Left: category list ── */
+.snav__cats {
+  list-style: none;
+  margin: 0;
+  padding: 12px 0;
+  width: 240px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--color-border, rgba(0,0,0,.08));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.snav__cat-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--color-foreground);
+  border-radius: 6px;
+  margin-inline: 8px;
+  transition: background 0.12s;
+}
+
+.snav__cat-link:hover,
+.snav__cat--active .snav__cat-link {
+  background: var(--color-border, rgba(0,0,0,.05));
+}
+
+.snav__cat--active .snav__cat-link {
+  font-weight: 700;
+  color: var(--color-primary, #000);
+}
+
+.snav__cat-arrow {
+  flex-shrink: 0;
+  opacity: 0.4;
+  transition: opacity 0.12s;
+}
+
+.snav__cat--active .snav__cat-arrow,
+.snav__cat-link:hover .snav__cat-arrow {
+  opacity: 0.8;
+}
+
+/* ── Right: sub-panels ── */
+.snav__subs {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 20px 24px 24px;
+  position: relative;
+}
+
+.snav__sub {
+  display: none;
+}
+
+.snav__sub--active {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.snav__sub-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.snav__sub-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  text-decoration: none;
+  color: var(--color-foreground);
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.14s;
+}
+
+.snav__sub-card:hover {
+  background: var(--color-border, rgba(0,0,0,.04));
+}
+
+.snav__sub-img-wrap {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--color-background-2, #f5f5f5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.snav__sub-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  padding: 4px;
+}
+
+.snav__sub-img--empty {
+  width: 60%;
+  height: 60%;
+  background: var(--color-border, #ddd);
+  border-radius: 4px;
+}
+
+.snav__sub-name {
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.35;
+  color: var(--color-foreground);
+}
+
+.snav__sub-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--color-primary, #000);
+  margin-top: 4px;
+  padding: 4px 0;
+  border-bottom: 1.5px solid currentColor;
+  align-self: flex-start;
+  transition: opacity 0.15s;
+}
+
+.snav__sub-all:hover {
+  opacity: 0.7;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ MOBILE BAR */
+
+.snav__mob-bar {
+  border-top: 1px solid var(--color-border, rgba(0,0,0,.08));
+}
+
+.snav__mob-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px 20px;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+  cursor: pointer;
+  text-align: left;
+}
+
+.snav__mob-caret {
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.snav__mob-btn[aria-expanded="true"] .snav__mob-caret {
+  transform: rotate(180deg);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ MOBILE SHEET */
+
+.snav-sheet {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(380px, 100vw);
+  background: var(--color-background, #fff);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow: -4px 0 32px rgba(0,0,0,.12);
+}
+
+.snav-sheet[aria-hidden="false"] {
+  transform: translateX(0);
+}
+
+.snav-sheet__hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border, rgba(0,0,0,.08));
+  position: sticky;
+  top: 0;
+  background: inherit;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.snav-sheet__title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.snav-sheet__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--color-foreground);
+  transition: background 0.15s;
+}
+
+.snav-sheet__close:hover {
+  background: var(--color-border, rgba(0,0,0,.06));
+}
+
+.snav-sheet__list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 0 32px;
+  flex: 1;
+}
+
+.snav-sheet__item {
+  border-bottom: 1px solid var(--color-border, rgba(0,0,0,.06));
+}
+
+.snav-sheet__acc {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 20px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+  cursor: pointer;
+  text-align: left;
+}
+
+.snav-sheet__chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  opacity: 0.5;
+}
+
+.snav-sheet__acc[aria-expanded="true"] .snav-sheet__chevron {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+.snav-sheet__sub {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 6px;
+  background: rgba(0,0,0,.02);
+}
+
+.snav-sheet__link {
+  display: block;
+  padding: 9px 20px 9px 32px;
+  font-size: 0.875rem;
+  text-decoration: none;
+  color: var(--color-foreground);
+  transition: color 0.12s;
+}
+
+.snav-sheet__link:hover {
+  color: var(--color-primary, #000);
+}
+
+.snav-sheet__item > .snav-sheet__link {
+  /* Top-level leaf links (no children) */
+  padding-left: 20px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.snav-sheet__link--all {
+  padding-left: 20px;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--color-primary, #000);
+  border-bottom: 1px solid var(--color-border, rgba(0,0,0,.06));
+  padding-bottom: 10px;
+  margin-bottom: 2px;
+}
+
+.snav-sheet__link--child {
+  color: rgba(var(--color-foreground-rgb, 0,0,0), 0.72);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ OVERLAY */
+
+.snav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s ease;
+}
+
+.snav-overlay[aria-hidden="false"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ RESPONSIVE */
+
+@media screen and (min-width: 990px) {
+  .snav__bar     { display: block; }
+  .snav__mob-bar { display: none; }
+}
+
+@media screen and (max-width: 989px) {
+  .snav__bar { display: none; }
+}
+
+{% endstylesheet %}
+
+
+{% javascript %}
+
+(function () {
+  'use strict';
+
+  class StigaNav {
+    constructor(nav) {
+      this.nav     = nav;
+      this.trigger = nav.querySelector('.snav__trigger');
+      this.mega    = nav.querySelector('.snav__mega');
+      this.catLinks = Array.from(nav.querySelectorAll('[data-snav-cat-idx]'));
+      this.catItems = Array.from(nav.querySelectorAll('[data-snav-cat]'));
+      this.panels   = Array.from(nav.querySelectorAll('[data-snav-panel]'));
+
+      this.mobBtn   = nav.querySelector('.snav__mob-btn');
+      this.sheet    = nav.querySelector('.snav-sheet');
+      this.sheetClose = nav.querySelector('.snav-sheet__close');
+      this.overlay  = nav.querySelector('.snav-overlay');
+      this.accBtns  = Array.from(nav.querySelectorAll('.snav-sheet__acc'));
+
+      this._closeDelay = null;
+      this._init();
+    }
+
+    _init() {
+      /* ── Desktop: open/close mega ── */
+      this.trigger?.addEventListener('click', () => this._toggleMega());
+
+      /* Keep mega open while hovering inside it */
+      this.mega?.addEventListener('mouseenter', () => clearTimeout(this._closeDelay));
+      this.mega?.addEventListener('mouseleave', () => {
+        this._closeDelay = setTimeout(() => this._closeMega(), 120);
+      });
+      this.nav.querySelector('.snav__bar')?.addEventListener('mouseleave', () => {
+        this._closeDelay = setTimeout(() => this._closeMega(), 120);
+      });
+      this.nav.querySelector('.snav__bar')?.addEventListener('mouseenter', () => clearTimeout(this._closeDelay));
+
+      /* ── Desktop: hover a category link → switch sub-panel ── */
+      this.catLinks.forEach(link => {
+        link.addEventListener('mouseenter', () => {
+          const idx = parseInt(link.dataset.snavCatIdx, 10);
+          this._switchPanel(idx);
+        });
+      });
+
+      /* ── Close mega on outside click ── */
+      document.addEventListener('click', e => {
+        if (this.mega && !this.nav.contains(e.target)) this._closeMega();
+      });
+
+      /* ── Mobile: open sheet ── */
+      this.mobBtn?.addEventListener('click', () => this._openSheet());
+
+      /* ── Mobile: close sheet ── */
+      this.sheetClose?.addEventListener('click', () => this._closeSheet());
+      this.overlay?.addEventListener('click', () => this._closeSheet());
+
+      /* ── Mobile: accordion ── */
+      this.accBtns.forEach(btn => btn.addEventListener('click', () => this._toggleAcc(btn)));
+
+      /* ── ESC ── */
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { this._closeMega(); this._closeSheet(); }
+      });
+
+      /* Show the first panel by default so there's immediate content on open */
+      this._switchPanel(0);
+    }
+
+    /* ── Mega helpers ── */
+    _toggleMega() {
+      const open = this.mega?.getAttribute('aria-hidden') !== 'false';
+      open ? this._openMega() : this._closeMega();
+    }
+
+    _openMega() {
+      clearTimeout(this._closeDelay);
+      this.mega?.setAttribute('aria-hidden', 'false');
+      this.trigger?.setAttribute('aria-expanded', 'true');
+    }
+
+    _closeMega() {
+      this.mega?.setAttribute('aria-hidden', 'true');
+      this.trigger?.setAttribute('aria-expanded', 'false');
+    }
+
+    _switchPanel(idx) {
+      this.panels.forEach((panel, i) => {
+        const active = i === idx;
+        panel.classList.toggle('snav__sub--active', active);
+        panel.setAttribute('aria-hidden', active ? 'false' : 'true');
+      });
+      this.catItems.forEach((item, i) => {
+        item.classList.toggle('snav__cat--active', i === idx);
+      });
+    }
+
+    /* ── Sheet helpers ── */
+    _openSheet() {
+      this.sheet?.setAttribute('aria-hidden', 'false');
+      this.overlay?.setAttribute('aria-hidden', 'false');
+      this.mobBtn?.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      this.sheetClose?.focus();
+    }
+
+    _closeSheet() {
+      this.sheet?.setAttribute('aria-hidden', 'true');
+      this.overlay?.setAttribute('aria-hidden', 'true');
+      this.mobBtn?.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    /* ── Accordion ── */
+    _toggleAcc(btn) {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      const subId = btn.getAttribute('aria-controls');
+      const sub = document.getElementById(subId);
+      btn.setAttribute('aria-expanded', String(!expanded));
+      if (sub) sub.hidden = expanded;
+    }
+  }
+
+  /* Boot */
+  const boot = () => {
+    const el = document.getElementById('snav');
+    if (el) new StigaNav(el);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
+}());
+
+{% endjavascript %}
+
+
+{% schema %}
+{
+  "name": "Stiga category nav",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": []
+}
+{% endschema %}
