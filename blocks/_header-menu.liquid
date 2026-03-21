@@ -78,7 +78,15 @@
     %}
 
     {% capture children %}
+      {%- assign stiga_menu = linklists['stiga-categorii'] -%}
       {% for link in block_settings.menu.links %}
+        {%- assign is_catalog_link = false -%}
+        {%- if link.url == routes.collections_url -%}
+          {%- assign is_catalog_link = true -%}
+        {%- endif -%}
+        {%- assign link_has_submenu = false -%}
+        {%- if link.links != blank -%}{%- assign link_has_submenu = true -%}{%- endif -%}
+        {%- if is_catalog_link and stiga_menu.links.size > 0 -%}{%- assign link_has_submenu = true -%}{%- endif -%}
         <li
           role="presentation"
           class="menu-list__list-item"
@@ -91,7 +99,7 @@
             href="{{ link.url }}"
             data-skip-node-update="true"
             class="menu-list__link{% if link.active %} menu-list__link--active{% endif %}"
-            {%- if link.links != blank -%}
+            {%- if link_has_submenu -%}
               aria-controls="submenu-{{ forloop.index }}"
               aria-haspopup="true"
               aria-expanded="false"
@@ -103,7 +111,17 @@
           >
             <span class="menu-list__link-title">{{- link.title -}}</span>
           </a>
-          {%- if link.links != blank -%}
+          {%- if is_catalog_link and stiga_menu.links.size > 0 -%}
+            <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
+              <div
+                id="submenu-{{ forloop.index }}"
+                class="menu-list__submenu-inner stiga-cmeg-wrapper"
+                style="{% render 'submenu-font-styles', settings: block_settings %}"
+              >
+                {% render 'stiga-catalog-megamenu', stiga_menu: stiga_menu, section: section %}
+              </div>
+            </div>
+          {%- elsif link.links != blank -%}
             <div class="menu-list__submenu{{ color_scheme_classes }}" ref="submenu[]">
               <div
                 id="submenu-{{ forloop.index }}"
@@ -665,6 +683,167 @@
   .mega-menu__submenu {
     /* preserves the inherited grid layout when this submenu wrapper is used */
     display: contents;
+  }
+
+  /* ── Stiga catalog mega-menu ───────────────────────────────────────────── */
+
+  /* Strip the default submenu-inner padding/overflow so the two-panel layout
+     fills the full dropdown width and handles its own scroll. */
+  .stiga-cmeg-wrapper.menu-list__submenu-inner {
+    padding: 0;
+    overflow: visible;
+  }
+
+  .stiga-cmeg {
+    width: 100%;
+  }
+
+  .stiga-cmeg__body {
+    display: flex;
+    min-height: 300px;
+    max-height: calc(80vh - var(--header-height, 60px));
+  }
+
+  /* Left: vertical category list */
+  .stiga-cmeg__cats {
+    list-style: none;
+    margin: 0;
+    padding: 12px 0;
+    width: 220px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--color-border, rgba(0,0,0,.08));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .stiga-cmeg__cat-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 9px 14px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--color-foreground);
+    border-radius: 6px;
+    margin-inline: 6px;
+    transition: background 0.12s ease;
+  }
+
+  .stiga-cmeg__cat.is-active .stiga-cmeg__cat-link,
+  .stiga-cmeg__cat-link:hover {
+    background: rgba(var(--color-foreground-rgb, 0,0,0), 0.06);
+  }
+
+  .stiga-cmeg__cat.is-active .stiga-cmeg__cat-link {
+    font-weight: 700;
+  }
+
+  .stiga-cmeg__cat-arrow {
+    flex-shrink: 0;
+    opacity: 0.35;
+    transition: opacity 0.12s ease;
+  }
+
+  .stiga-cmeg__cat.is-active .stiga-cmeg__cat-arrow,
+  .stiga-cmeg__cat-link:hover .stiga-cmeg__cat-arrow {
+    opacity: 0.7;
+  }
+
+  /* Right: sub-category panels */
+  .stiga-cmeg__panels {
+    flex: 1;
+    min-width: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 20px 24px 24px;
+  }
+
+  .stiga-cmeg__panel {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .stiga-cmeg__panel.is-active {
+    display: flex;
+  }
+
+  .stiga-cmeg__sub-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+    gap: 10px;
+  }
+
+  .stiga-cmeg__sub-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: var(--color-foreground);
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.12s ease;
+  }
+
+  .stiga-cmeg__sub-card:hover {
+    background: rgba(var(--color-foreground-rgb, 0,0,0), 0.05);
+  }
+
+  .stiga-cmeg__sub-img-wrap {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 6px;
+    overflow: hidden;
+    background: rgba(var(--color-foreground-rgb, 0,0,0), 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stiga-cmeg__sub-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    padding: 4px;
+  }
+
+  .stiga-cmeg__sub-img--empty {
+    width: 55%;
+    height: 55%;
+    background: rgba(var(--color-foreground-rgb, 0,0,0), 0.12);
+    border-radius: 4px;
+  }
+
+  .stiga-cmeg__sub-name {
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .stiga-cmeg__all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: var(--color-foreground);
+    align-self: flex-start;
+    padding: 3px 0;
+    border-bottom: 1.5px solid currentColor;
+    transition: opacity 0.15s ease;
+  }
+
+  .stiga-cmeg__all-link:hover {
+    opacity: 0.65;
   }
 {% endstylesheet %}
 

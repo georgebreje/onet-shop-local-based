@@ -84,16 +84,9 @@
         "enable_transparent_header_collection": false,
         "collection_color_scheme": "default"
       }
-    },
-    "stiga_category_nav": {
-      "type": "stiga-category-nav",
-      "settings": {
-        "color_scheme": "scheme-1"
-      }
     }
   },
   "order": [
-    "header_section",
-    "stiga_category_nav"
+    "header_section"
   ]
 }

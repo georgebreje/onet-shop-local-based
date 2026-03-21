@@ -1,0 +1,131 @@
+{% comment %}
+  stiga-catalog-megamenu.liquid
+
+  Two-panel mega-menu for the Catalog nav item (desktop only).
+  Rendered inside .menu-list__submenu-inner, which already handles the slide
+  animation, opacity, max-height and positioning.
+
+  Left column  — all top-level stiga categories; hover switches the right panel.
+  Right column — subcategory image cards for the active category.
+
+  @param {object} stiga_menu  - linklists['stiga-categorii']
+  @param {object} section     - the section object (for width class)
+{% endcomment %}
+
+<div class="stiga-cmeg" id="stiga-cmeg">
+  <div class="stiga-cmeg__body">
+
+    {%- comment -%} ── Left: category list ── {%- endcomment -%}
+    <ul class="stiga-cmeg__cats" role="list" aria-label="Categorii">
+      {%- for link in stiga_menu.links -%}
+        <li
+          class="stiga-cmeg__cat{% if forloop.first %} is-active{% endif %}"
+          data-cmeg-cat="{{ forloop.index0 }}"
+        >
+          <a
+            class="stiga-cmeg__cat-link"
+            href="{{ link.url }}"
+            data-cmeg-trigger="{{ forloop.index0 }}"
+          >
+            <span>{{- link.title -}}</span>
+            {%- if link.links.size > 0 -%}
+              <svg class="stiga-cmeg__cat-arrow" width="5" height="9" viewBox="0 0 5 9"
+                   fill="none" aria-hidden="true">
+                <path d="M1 1l3 3.5L1 8" stroke="currentColor" stroke-width="1.4"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            {%- endif -%}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {%- comment -%} ── Right: sub-category panels ── {%- endcomment -%}
+    <div class="stiga-cmeg__panels">
+      {%- for link in stiga_menu.links -%}
+        <div
+          class="stiga-cmeg__panel{% if forloop.first %} is-active{% endif %}"
+          data-cmeg-panel="{{ forloop.index0 }}"
+          aria-hidden="{{ forloop.first | map: 'false' | default: 'true' }}"
+        >
+
+          {%- if link.links.size > 0 -%}
+            <ul class="stiga-cmeg__sub-grid" role="list">
+              {%- for child in link.links -%}
+                <li>
+                  <a class="stiga-cmeg__sub-card" href="{{ child.url }}">
+                    <div class="stiga-cmeg__sub-img-wrap">
+                      {%- if child.object.image -%}
+                        {{-
+                          child.object.image
+                          | image_url: width: 240
+                          | image_tag:
+                            loading: 'lazy',
+                            class: 'stiga-cmeg__sub-img',
+                            widths: '120, 240',
+                            sizes: '110px'
+                        -}}
+                      {%- else -%}
+                        <div class="stiga-cmeg__sub-img stiga-cmeg__sub-img--empty"></div>
+                      {%- endif -%}
+                    </div>
+                    <span class="stiga-cmeg__sub-name">{{- child.title -}}</span>
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+
+          <a class="stiga-cmeg__all-link" href="{{ link.url }}">
+            Toate {{ link.title | downcase }}
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+              <path d="M2 5.5h7M6.5 3l2.5 2.5L6.5 8"
+                    stroke="currentColor" stroke-width="1.3"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+
+        </div>
+      {%- endfor -%}
+    </div>
+
+  </div>
+</div>
+
+<script type="module">
+  (() => {
+    const cmeg = document.getElementById('stiga-cmeg');
+    if (!cmeg) return;
+
+    const catLinks  = cmeg.querySelectorAll('[data-cmeg-trigger]');
+    const catItems  = cmeg.querySelectorAll('[data-cmeg-cat]');
+    const panels    = cmeg.querySelectorAll('[data-cmeg-panel]');
+
+    function activate(idx) {
+      catItems.forEach((el, i) => el.classList.toggle('is-active', i === idx));
+      panels.forEach((el, i) => {
+        el.classList.toggle('is-active', i === idx);
+        el.setAttribute('aria-hidden', i === idx ? 'false' : 'true');
+      });
+    }
+
+    catLinks.forEach(link => {
+      link.addEventListener('mouseenter', () =>
+        activate(parseInt(link.dataset.cmegTrigger, 10))
+      );
+      /* keyboard: arrow keys to move between categories */
+      link.addEventListener('keydown', e => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const idx = parseInt(link.dataset.cmegTrigger, 10);
+          const next = e.key === 'ArrowDown' ? idx + 1 : idx - 1;
+          const target = cmeg.querySelector(`[data-cmeg-trigger="${next}"]`);
+          if (target) { activate(next); target.focus(); }
+        }
+      });
+    });
+
+    /* Ensure first panel is active on open */
+    activate(0);
+  })();
+</script>

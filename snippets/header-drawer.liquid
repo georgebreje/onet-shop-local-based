@@ -107,7 +107,82 @@
                 style="--menu-drawer-animation-index: {{ animation_index }};"
                 class="{%- if block_settings.drawer_accordion -%}menu-drawer__list-item--deep{%- else -%}menu-drawer__list-item--flat{%- endif -%}{% if block_settings.drawer_dividers %} menu-drawer__list-item--divider{% endif %}"
               >
-                {% if block_settings.drawer_accordion and link.links != blank %}
+                {%- assign is_catalog_link = false -%}
+                {%- if link.url == routes.collections_url -%}
+                  {%- assign is_catalog_link = true -%}
+                {%- endif -%}
+                {%- assign stiga_menu_drw = linklists['stiga-categorii'] -%}
+                {%- if is_catalog_link and stiga_menu_drw.links.size > 0 -%}
+                  {%- comment -%} Catalog link: render stiga-categorii as a two-level accordion.
+                    Level 1 — top-level categories (collapsed by default).
+                    Level 2 — subcategories (only expand when the parent is tapped). {%- endcomment -%}
+                  <accordion-custom>
+                    <details id="Details-menu-drawer-catalog">
+                      <summary
+                        class="menu-drawer__menu-item menu-drawer__menu-item--mainlist menu-drawer__animated-element focus-inset"
+                      >
+                        <span class="menu-drawer__menu-item-text wrap-text">{{ link.title | escape }}</span>
+                        <span class="svg-wrapper icon-plus">
+                          {{- 'icon-plus.svg' | inline_asset_content -}}
+                        </span>
+                      </summary>
+                      <ul
+                        class="menu-drawer__menu menu-drawer__menu--childlist menu-drawer__animated-element details-content"
+                        role="list"
+                        tabindex="-1"
+                      >
+                        {%- for cat in stiga_menu_drw.links -%}
+                          {%- assign cat_anim = forloop.index -%}
+                          <li
+                            class="menu-drawer__list-item"
+                            style="--menu-drawer-animation-index: {{ cat_anim }};"
+                          >
+                            {%- if cat.links.size > 0 -%}
+                              <accordion-custom>
+                                <details id="Details-menu-drawer-cat-{{ forloop.index }}">
+                                  <summary
+                                    class="menu-drawer__menu-item menu-drawer__menu-item--child focus-inset"
+                                  >
+                                    <span class="menu-drawer__menu-item-text wrap-text">{{ cat.title | escape }}</span>
+                                    <span class="svg-wrapper icon-plus">
+                                      {{- 'icon-plus.svg' | inline_asset_content -}}
+                                    </span>
+                                  </summary>
+                                  <ul
+                                    class="menu-drawer__menu menu-drawer__menu--childlist details-content"
+                                    role="list"
+                                    tabindex="-1"
+                                  >
+                                    {%- for child in cat.links -%}
+                                      <li
+                                        class="menu-drawer__list-item"
+                                        style="--menu-drawer-animation-index: {{ forloop.index }};"
+                                      >
+                                        <a
+                                          href="{{ child.url }}"
+                                          class="menu-drawer__menu-item menu-drawer__menu-item--child focus-inset"
+                                        >
+                                          <span class="menu-drawer__menu-item-text wrap-text">{{ child.title | escape }}</span>
+                                        </a>
+                                      </li>
+                                    {%- endfor -%}
+                                  </ul>
+                                </details>
+                              </accordion-custom>
+                            {%- else -%}
+                              <a
+                                href="{{ cat.url }}"
+                                class="menu-drawer__menu-item menu-drawer__menu-item--child menu-drawer__animated-element focus-inset"
+                              >
+                                <span class="menu-drawer__menu-item-text wrap-text">{{ cat.title | escape }}</span>
+                              </a>
+                            {%- endif -%}
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    </details>
+                  </accordion-custom>
+                {%- elsif block_settings.drawer_accordion and link.links != blank -%}
                   {%- comment -%}
                     Accordion for links with children, in menus with fewer than 3 levels of links
                   {%- endcomment -%}
