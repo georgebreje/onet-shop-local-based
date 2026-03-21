@@ -97,6 +97,12 @@
         "padding-block-end": 48
       }
     },
+    "stiga_subcollections": {
+      "type": "stiga-subcollections",
+      "settings": {
+        "color_scheme": "scheme-2"
+      }
+    },
     "main": {
       "type": "main-collection",
       "blocks": {
@@ -228,6 +234,7 @@
   },
   "order": [
     "section",
+    "stiga_subcollections",
     "main"
   ]
 }

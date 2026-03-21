@@ -1,0 +1,197 @@
+{% comment %}
+  Renders the full Stiga category hierarchy on the /collections page.
+  Top-level items from stiga-categorii appear as h2 headings; their children
+  appear as cards in a grid below. The menu is the single source of truth —
+  no handles or titles are hardcoded here.
+{% endcomment %}
+
+{% assign stiga_menu = linklists['stiga-categorii'] %}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+<div
+  class="section section--page-width color-{{ section.settings.color_scheme }} stiga-hierarchy"
+  style="padding-block-start: {{ section.settings.padding_top }}px; padding-block-end: {{ section.settings.padding_bottom }}px;"
+>
+  {% if section.settings.page_title != blank %}
+    <h1 class="stiga-hierarchy__page-title">{{ section.settings.page_title }}</h1>
+  {% endif %}
+
+  {% for top_link in stiga_menu.links %}
+    <div class="stiga-hierarchy__category">
+      <h2 class="stiga-hierarchy__heading">
+        <a href="{{ top_link.url }}" class="stiga-hierarchy__heading-link">{{ top_link.title }}</a>
+      </h2>
+
+      <div class="stiga-hierarchy__grid">
+        {% if top_link.links.size > 0 %}
+          {% for child in top_link.links %}
+            <a href="{{ child.url }}" class="stiga-hierarchy__card">
+              {% if child.object.image %}
+                {{
+                  child.object.image
+                  | image_url: width: 400
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'stiga-hierarchy__card-image',
+                    widths: '200, 400',
+                    sizes: '(min-width: 990px) 20vw, (min-width: 750px) 25vw, 50vw'
+                }}
+              {% else %}
+                <div class="stiga-hierarchy__card-image stiga-hierarchy__card-image--placeholder"></div>
+              {% endif %}
+              <span class="stiga-hierarchy__card-title">{{ child.title }}</span>
+            </a>
+          {% endfor %}
+        {% else %}
+          {% comment %} Top-level link with no children — render it as its own card {% endcomment %}
+          <a href="{{ top_link.url }}" class="stiga-hierarchy__card">
+            {% if top_link.object.image %}
+              {{
+                top_link.object.image
+                | image_url: width: 400
+                | image_tag:
+                  loading: 'lazy',
+                  class: 'stiga-hierarchy__card-image',
+                  widths: '200, 400',
+                  sizes: '(min-width: 990px) 20vw, (min-width: 750px) 25vw, 50vw'
+              }}
+            {% else %}
+              <div class="stiga-hierarchy__card-image stiga-hierarchy__card-image--placeholder"></div>
+            {% endif %}
+            <span class="stiga-hierarchy__card-title">{{ top_link.title }}</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% stylesheet %}
+  .stiga-hierarchy {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .stiga-hierarchy__page-title {
+    font-size: 2rem;
+    margin-block-end: 0;
+  }
+
+  .stiga-hierarchy__category {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .stiga-hierarchy__heading {
+    font-size: 1.375rem;
+    margin: 0;
+  }
+
+  .stiga-hierarchy__heading-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .stiga-hierarchy__heading-link:hover {
+    text-decoration: underline;
+  }
+
+  .stiga-hierarchy__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .stiga-hierarchy__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .stiga-hierarchy__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .stiga-hierarchy__card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--card-corner-radius, 4px);
+    overflow: hidden;
+    border: 1px solid var(--color-border, #e6e6e6);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .stiga-hierarchy__card:hover {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .stiga-hierarchy__card-image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+  }
+
+  .stiga-hierarchy__card-image--placeholder {
+    background-color: var(--color-border, #e6e6e6);
+  }
+
+  .stiga-hierarchy__card-title {
+    display: block;
+    padding: 10px 12px 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Stiga category hierarchy",
+  "enabled_on": {
+    "templates": ["list-collections"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "page_title",
+      "label": "Page title",
+      "default": "Categorii"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top_padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom_padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": []
+}
+{% endschema %}
