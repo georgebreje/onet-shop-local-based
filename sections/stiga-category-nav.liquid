@@ -76,37 +76,66 @@
         {%- comment -%} Right column — subcategory panels {%- endcomment -%}
         <div class="snav__subs">
           {%- for link in stiga_menu.links -%}
+            {%- comment -%} Detect whether any child in this group has an image {%- endcomment -%}
+            {%- assign has_images = false -%}
+            {%- for child in link.links -%}
+              {%- if child.object.image -%}
+                {%- assign has_images = true -%}
+              {%- endif -%}
+            {%- endfor -%}
+
             <div
               class="snav__sub{% if forloop.first %} snav__sub--active{% endif %}"
               data-snav-panel="{{ forloop.index0 }}"
               aria-hidden="{{ forloop.first | map: 'false' | default: 'true' }}"
             >
               {%- if link.links.size > 0 -%}
-                <ul class="snav__sub-grid" role="list">
-                  {%- for child in link.links -%}
-                    <li>
-                      <a class="snav__sub-card" href="{{ child.url }}">
-                        <div class="snav__sub-img-wrap">
-                          {%- if child.object.image -%}
-                            {{-
-                              child.object.image
-                              | image_url: width: 260
-                              | image_tag:
-                                loading: 'lazy',
-                                class: 'snav__sub-img',
-                                widths: '130, 260',
-                                sizes: '130px'
-                            -}}
-                          {%- else -%}
-                            <div class="snav__sub-img snav__sub-img--empty"></div>
-                          {%- endif -%}
-                        </div>
-                        <span class="snav__sub-name">{{- child.title -}}</span>
-                      </a>
-                    </li>
-                  {%- endfor -%}
-                </ul>
+
+                {%- if has_images -%}
+                  {%- comment -%} ── IMAGE CARD GRID ── {%- endcomment -%}
+                  <ul class="snav__sub-grid snav__sub-grid--cards" role="list">
+                    {%- for child in link.links -%}
+                      <li>
+                        <a class="snav__sub-card" href="{{ child.url }}">
+                          <div class="snav__sub-img-wrap">
+                            {%- if child.object.image -%}
+                              {{-
+                                child.object.image
+                                | image_url: width: 260
+                                | image_tag:
+                                  loading: 'lazy',
+                                  class: 'snav__sub-img',
+                                  widths: '130, 260',
+                                  sizes: '130px'
+                              -}}
+                            {%- else -%}
+                              <div class="snav__sub-img snav__sub-img--empty"></div>
+                            {%- endif -%}
+                          </div>
+                          <span class="snav__sub-name">{{- child.title -}}</span>
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+
+                {%- else -%}
+                  {%- comment -%} ── TEXT LINK LIST (no images) ── {%- endcomment -%}
+                  <ul class="snav__sub-grid snav__sub-grid--links" role="list">
+                    {%- for child in link.links -%}
+                      <li>
+                        <a class="snav__sub-link" href="{{ child.url }}">
+                          <svg class="snav__sub-link-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                            <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                          {{- child.title -}}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+
               {%- endif -%}
+
               <a class="snav__sub-all" href="{{ link.url }}">
                 Toate {{ link.title | downcase }}
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -252,9 +281,9 @@
 
 .snav__trigger:hover,
 .snav__trigger[aria-expanded="true"] {
-  background: var(--color-primary, #000);
-  border-color: var(--color-primary, #000);
-  color: var(--color-primary-text, #fff);
+  background: var(--color-primary, #4A7C59);
+  border-color: var(--color-primary, #4A7C59);
+  color: #fff;
 }
 
 .snav__trigger-icon {
@@ -338,7 +367,8 @@
 
 .snav__cat--active .snav__cat-link {
   font-weight: 700;
-  color: var(--color-primary, #000);
+  color: var(--color-primary, #4A7C59);
+  background: var(--color-border, rgba(0,0,0,.05));
 }
 
 .snav__cat-arrow {
@@ -368,18 +398,63 @@
 .snav__sub--active {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
+/* ── Subcategory grid: image-card variant ── */
 .snav__sub-grid {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 10px;
 }
 
+.snav__sub-grid--cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+/* ── Subcategory grid: text-link variant (no images) ── */
+.snav__sub-grid--links {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2px;
+}
+
+.snav__sub-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--color-foreground);
+  border-radius: 6px;
+  transition: background 0.12s, color 0.12s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.snav__sub-link:hover {
+  background: var(--color-border, rgba(0,0,0,.05));
+  color: var(--color-primary, #4A7C59);
+}
+
+.snav__sub-link-arrow {
+  flex-shrink: 0;
+  color: var(--color-primary, #4A7C59);
+  opacity: 0;
+  transition: opacity 0.12s, transform 0.12s;
+}
+
+.snav__sub-link:hover .snav__sub-link-arrow {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+/* ── Image card ── */
 .snav__sub-card {
   display: flex;
   flex-direction: column;
@@ -423,30 +498,32 @@
 }
 
 .snav__sub-name {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 500;
   text-align: center;
   line-height: 1.35;
   color: var(--color-foreground);
+  word-break: break-word;
 }
 
 .snav__sub-all {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   font-size: 0.8125rem;
   font-weight: 700;
   text-decoration: none;
-  color: var(--color-primary, #000);
-  margin-top: 4px;
-  padding: 4px 0;
-  border-bottom: 1.5px solid currentColor;
+  color: var(--color-primary, #4A7C59);
+  padding: 7px 10px;
+  border: 1.5px solid var(--color-primary, #4A7C59);
+  border-radius: 6px;
   align-self: flex-start;
-  transition: opacity 0.15s;
+  transition: background 0.15s, color 0.15s;
 }
 
 .snav__sub-all:hover {
-  opacity: 0.7;
+  background: var(--color-primary, #4A7C59);
+  color: #fff;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ MOBILE BAR */
