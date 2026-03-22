@@ -1,0 +1,380 @@
+/*
+ * Gardening Store Theme — Design Tokens
+ * Earth-tone palette purpose-built for a gardening tools store.
+ * These CSS custom properties complement Horizon's color scheme system.
+ * Use these for gardening-specific sections and overrides.
+ */
+
+:root {
+  /* ── Colors — earth-tone palette ── */
+  --garden-primary: #4A7C59;       /* leaf green */
+  --garden-primary-dark: #3A6347;
+  --garden-secondary: #C67B4B;     /* warm clay */
+  --garden-accent: #E8A838;        /* sunflower — CTAs */
+  --garden-accent-hover: #D49730;
+  --garden-text: #2B2B2B;
+  --garden-text-light: #6B6B6B;
+  --garden-bg: #FAFAF7;            /* warm off-white */
+  --garden-bg-alt: #F0EDE8;        /* stone light */
+  --garden-surface: #FFFFFF;
+  --garden-border: #E0DBD4;
+  --garden-soil: #3B2F2F;          /* deep brown */
+  --garden-stone: #D4CBC2;
+
+  /* ── Typography ── */
+  --garden-font-heading: 'Playfair Display', 'Georgia', serif;
+  --garden-font-body: 'Source Sans 3', 'Helvetica Neue', sans-serif;
+
+  /* ── Fluid type scale ── */
+  --garden-text-xs:   clamp(0.75rem,  0.70rem + 0.25vw, 0.8125rem);
+  --garden-text-sm:   clamp(0.8125rem, 0.775rem + 0.25vw, 0.875rem);
+  --garden-text-base: clamp(0.9375rem, 0.875rem + 0.30vw, 1rem);
+  --garden-text-lg:   clamp(1.125rem,  1.00rem + 0.50vw, 1.25rem);
+  --garden-text-xl:   clamp(1.375rem,  1.15rem + 0.80vw, 1.625rem);
+  --garden-text-2xl:  clamp(1.75rem,   1.40rem + 1.20vw, 2.25rem);
+  --garden-text-3xl:  clamp(2.25rem,   1.70rem + 1.80vw, 3rem);
+
+  /* ── Spacing ── */
+  --garden-space-xs:  0.25rem;
+  --garden-space-sm:  0.5rem;
+  --garden-space-md:  1rem;
+  --garden-space-lg:  1.5rem;
+  --garden-space-xl:  2.5rem;
+  --garden-space-2xl: 4rem;
+  --garden-space-3xl: 6rem;
+
+  /* ── Layout ── */
+  --garden-container-max:    1280px;
+  --garden-container-narrow: 840px;
+  --garden-gutter: clamp(1rem, 2vw, 2rem);
+
+  /* ── Borders & Radius ── */
+  --garden-radius-sm:   4px;
+  --garden-radius-md:   8px;
+  --garden-radius-lg:   12px;
+  --garden-radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --garden-shadow-sm: 0 1px 3px rgba(59, 47, 47, 0.08);
+  --garden-shadow-md: 0 4px 12px rgba(59, 47, 47, 0.10);
+  --garden-shadow-lg: 0 8px 30px rgba(59, 47, 47, 0.12);
+
+  /* ── Transitions ── */
+  --garden-ease-out:       cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --garden-duration-fast:  150ms;
+  --garden-duration-normal:250ms;
+  --garden-duration-slow:  400ms;
+}
+
+/* ── Accessible skip link ── */
+.garden-skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: var(--garden-primary);
+  color: #fff;
+  border-radius: var(--garden-radius-md);
+  font-weight: 600;
+  text-decoration: none;
+  transition: top var(--garden-duration-fast) ease;
+}
+.garden-skip-link:focus {
+  top: 1rem;
+}
+
+/* ── Screen-reader only ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── Container ── */
+.garden-container {
+  max-width: var(--garden-container-max);
+  margin-inline: auto;
+  padding-inline: var(--garden-gutter);
+}
+.garden-container--narrow {
+  max-width: var(--garden-container-narrow);
+}
+
+/* ── Grid utilities ── */
+.garden-grid {
+  display: grid;
+  gap: var(--garden-gutter);
+}
+.garden-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.garden-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.garden-grid--4 { grid-template-columns: repeat(4, 1fr); }
+
+/* Collapse grids on mobile */
+@media (max-width: 639px) {
+  .garden-grid--3,
+  .garden-grid--4 { grid-template-columns: repeat(2, 1fr); }
+  .garden-grid--2 { grid-template-columns: 1fr; }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .garden-grid--4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ── Focus styles ── */
+:focus-visible {
+  outline: 3px solid var(--garden-accent);
+  outline-offset: 3px;
+  border-radius: var(--garden-radius-sm);
+}
+
+/* ── Gardening section shared base ── */
+.garden-section {
+  padding-block: var(--garden-space-2xl);
+}
+.garden-section--alt {
+  background: var(--garden-bg-alt);
+}
+.garden-section__heading {
+  font-family: var(--garden-font-heading);
+  font-size: var(--garden-text-2xl);
+  color: var(--garden-text);
+  margin-block-end: var(--garden-space-lg);
+  text-align: center;
+}
+.garden-section__subheading {
+  font-size: var(--garden-text-base);
+  color: var(--garden-text-light);
+  text-align: center;
+  margin-block-end: var(--garden-space-xl);
+}
+
+/* ── CTA Button ── */
+.garden-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--garden-radius-md);
+  font-weight: 600;
+  font-size: var(--garden-text-base);
+  text-decoration: none;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition:
+    background var(--garden-duration-fast) var(--garden-ease-out),
+    color var(--garden-duration-fast) var(--garden-ease-out),
+    border-color var(--garden-duration-fast) var(--garden-ease-out);
+}
+.garden-btn--primary {
+  background: var(--garden-accent);
+  color: var(--garden-text);
+  border-color: var(--garden-accent);
+}
+.garden-btn--primary:hover {
+  background: var(--garden-accent-hover);
+  border-color: var(--garden-accent-hover);
+}
+.garden-btn--secondary {
+  background: transparent;
+  color: var(--garden-primary);
+  border-color: var(--garden-primary);
+}
+.garden-btn--secondary:hover {
+  background: var(--garden-primary);
+  color: #fff;
+}
+
+/* ── Trust bar ── */
+.garden-trust-bar {
+  background: var(--garden-bg-alt);
+  padding-block: var(--garden-space-xl);
+}
+.garden-trust-bar__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--garden-space-lg);
+}
+@media (min-width: 768px) {
+  .garden-trust-bar__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.garden-trust-bar__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--garden-space-sm);
+}
+.garden-trust-bar__icon {
+  width: 40px;
+  height: 40px;
+  color: var(--garden-primary);
+}
+.garden-trust-bar__title {
+  font-weight: 700;
+  font-size: var(--garden-text-sm);
+  color: var(--garden-text);
+}
+.garden-trust-bar__desc {
+  font-size: var(--garden-text-xs);
+  color: var(--garden-text-light);
+  line-height: 1.5;
+}
+
+/* ── Testimonials ── */
+.garden-testimonials {
+  padding-block: var(--garden-space-2xl);
+  background: var(--garden-bg);
+}
+.garden-testimonials__grid {
+  display: grid;
+  gap: var(--garden-space-lg);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .garden-testimonials__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.garden-testimonial {
+  background: var(--garden-surface);
+  border: 1px solid var(--garden-border);
+  border-radius: var(--garden-radius-lg);
+  padding: var(--garden-space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--garden-space-md);
+  box-shadow: var(--garden-shadow-sm);
+}
+.garden-testimonial__stars {
+  color: var(--garden-accent);
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+.garden-testimonial__quote {
+  font-size: var(--garden-text-base);
+  color: var(--garden-text);
+  line-height: 1.7;
+  flex: 1;
+  font-style: italic;
+}
+.garden-testimonial__author {
+  font-weight: 700;
+  font-size: var(--garden-text-sm);
+  color: var(--garden-text);
+}
+.garden-testimonial__product {
+  font-size: var(--garden-text-xs);
+  color: var(--garden-primary);
+}
+
+/* ── Breadcrumbs ── */
+.garden-breadcrumbs {
+  padding-block: var(--garden-space-sm);
+}
+.garden-breadcrumbs__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--garden-space-xs);
+  font-size: var(--garden-text-xs);
+  color: var(--garden-text-light);
+}
+.garden-breadcrumbs__item {
+  display: flex;
+  align-items: center;
+  gap: var(--garden-space-xs);
+}
+.garden-breadcrumbs__item::after {
+  content: '›';
+  opacity: 0.5;
+}
+.garden-breadcrumbs__item:last-child::after {
+  display: none;
+}
+.garden-breadcrumbs__link {
+  color: var(--garden-primary);
+  text-decoration: none;
+}
+.garden-breadcrumbs__link:hover {
+  text-decoration: underline;
+}
+.garden-breadcrumbs__current {
+  color: var(--garden-text-light);
+}
+
+/* ── Free shipping progress bar (cart drawer) ── */
+.garden-shipping-bar {
+  padding: var(--garden-space-md);
+  background: var(--garden-bg-alt);
+  border-radius: var(--garden-radius-md);
+}
+.garden-shipping-bar__text {
+  font-size: var(--garden-text-sm);
+  color: var(--garden-text);
+  margin-block-end: var(--garden-space-sm);
+  text-align: center;
+}
+.garden-shipping-bar__track {
+  height: 6px;
+  background: var(--garden-border);
+  border-radius: var(--garden-radius-full);
+  overflow: hidden;
+}
+.garden-shipping-bar__fill {
+  height: 100%;
+  background: var(--garden-primary);
+  border-radius: var(--garden-radius-full);
+  transition: width var(--garden-duration-normal) var(--garden-ease-out);
+}
+.garden-shipping-bar__fill--complete {
+  background: var(--garden-accent);
+}
+
+/* ── Seasonal content / rich text section ── */
+.garden-rich-content {
+  display: grid;
+  gap: var(--garden-space-2xl);
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .garden-rich-content {
+    grid-template-columns: 1fr 1fr;
+  }
+  .garden-rich-content--reversed .garden-rich-content__media {
+    order: 2;
+  }
+}
+.garden-rich-content__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--garden-radius-lg);
+}
+.garden-rich-content__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--garden-space-md);
+}
+.garden-rich-content__heading {
+  font-family: var(--garden-font-heading);
+  font-size: var(--garden-text-2xl);
+  color: var(--garden-text);
+  line-height: 1.2;
+}
+.garden-rich-content__text {
+  font-size: var(--garden-text-base);
+  color: var(--garden-text-light);
+  line-height: 1.75;
+}

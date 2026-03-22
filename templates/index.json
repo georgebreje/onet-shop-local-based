@@ -118,6 +118,50 @@
         "padding-block-end": 60
       }
     },
+    "trust_bar_homepage": {
+      "type": "trust-bar",
+      "blocks": {
+        "prop_shipping": {
+          "type": "value-prop",
+          "settings": {
+            "icon_name": "truck",
+            "heading": "Livrare gratuită",
+            "description": "La comenzi peste 250 lei"
+          }
+        },
+        "prop_warranty": {
+          "type": "value-prop",
+          "settings": {
+            "icon_name": "shield",
+            "heading": "Garanție extinsă",
+            "description": "Pe toate uneltele manuale"
+          }
+        },
+        "prop_guides": {
+          "type": "value-prop",
+          "settings": {
+            "icon_name": "leaf",
+            "heading": "Ghiduri gratuite",
+            "description": "Sfaturi de grădinărit expert"
+          }
+        },
+        "prop_reviews": {
+          "type": "value-prop",
+          "settings": {
+            "icon_name": "star",
+            "heading": "Recenzii verificate",
+            "description": "Mii de clienți mulțumiți"
+          }
+        }
+      },
+      "block_order": ["prop_shipping", "prop_warranty", "prop_guides", "prop_reviews"],
+      "settings": {
+        "heading": "",
+        "color_scheme": "scheme-2",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
     "product_list_fa6P9H": {
       "type": "product-list",
       "blocks": {
@@ -311,10 +355,55 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "testimonials_homepage": {
+      "type": "testimonials",
+      "blocks": {
+        "review_1": {
+          "type": "testimonial",
+          "settings": {
+            "rating": "5",
+            "quote": "Uneltele Stiga sunt de o calitate excepțională. Le folosesc de 3 ani și arată ca noi. Recomand cu toată inima!",
+            "author": "Maria P.",
+            "product_title": "Foarfecă de grădină",
+            "product_url": ""
+          }
+        },
+        "review_2": {
+          "type": "testimonial",
+          "settings": {
+            "rating": "5",
+            "quote": "Livrarea a fost rapidă, produsele bine ambalate. Prețurile sunt corecte pentru calitatea oferită. Voi reveni cu siguranță!",
+            "author": "Ion M.",
+            "product_title": "",
+            "product_url": ""
+          }
+        },
+        "review_3": {
+          "type": "testimonial",
+          "settings": {
+            "rating": "5",
+            "quote": "Ghidurile incluse sunt extrem de utile pentru un grădinar începător ca mine. Magazinul acesta a devenit preferatul meu.",
+            "author": "Alina C.",
+            "product_title": "",
+            "product_url": ""
+          }
+        }
+      },
+      "block_order": ["review_1", "review_2", "review_3"],
+      "settings": {
+        "heading": "Ce spun clienții noștri",
+        "subheading": "Mii de grădinari mulțumiți din întreaga țară",
+        "color_scheme": "scheme-2",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "trust_bar_homepage",
+    "product_list_fa6P9H",
+    "testimonials_homepage"
   ]
 }

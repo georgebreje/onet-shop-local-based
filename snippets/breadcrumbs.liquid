@@ -1,0 +1,146 @@
+{%- comment -%}
+  Breadcrumbs snippet
+  Usage on collection pages:  {% render 'breadcrumbs', collection: collection %}
+  Usage on product pages:     {% render 'breadcrumbs', product: product, collection: collection %}
+  Usage on other pages:       {% render 'breadcrumbs' %}
+
+  Builds a breadcrumb trail and injects BreadcrumbList JSON-LD schema.
+  Reads parent–child hierarchy from the 'stiga-categorii' linklist.
+{%- endcomment -%}
+
+{%- liquid
+  assign stiga_menu = linklists['stiga-categorii']
+  assign crumbs = '' | split: ''
+
+  # Find parent collection for the current collection
+  assign parent_link = nil
+  assign current_link = nil
+
+  if collection
+    for top_link in stiga_menu.links
+      assign top_handle = top_link.url | split: '/collections/' | last | split: '?' | first | split: '/' | first
+      if top_handle == collection.handle
+        assign current_link = top_link
+      else
+        for child_link in top_link.links
+          assign child_handle = child_link.url | split: '/collections/' | last | split: '?' | first | split: '/' | first
+          if child_handle == collection.handle
+            assign parent_link = top_link
+            assign current_link = child_link
+          endif
+        endfor
+      endif
+    endfor
+  endif
+-%}
+
+<nav class="garden-breadcrumbs garden-container" aria-label="Navigare breadcrumb">
+  <ol class="garden-breadcrumbs__list" itemscope itemtype="https://schema.org/BreadcrumbList">
+
+    {%- comment -%} Home {%- endcomment -%}
+    <li class="garden-breadcrumbs__item"
+        itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a class="garden-breadcrumbs__link" href="{{ routes.root_url }}" itemprop="item">
+        <span itemprop="name">Acasă</span>
+      </a>
+      <meta itemprop="position" content="1">
+    </li>
+
+    {%- if product -%}
+      {%- comment -%} Product page: Home > Parent? > Collection > Product {%- endcomment -%}
+      {%- if collection -%}
+        {%- if parent_link -%}
+          <li class="garden-breadcrumbs__item"
+              itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a class="garden-breadcrumbs__link" href="{{ parent_link.url }}" itemprop="item">
+              <span itemprop="name">{{ parent_link.title }}</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+          <li class="garden-breadcrumbs__item"
+              itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a class="garden-breadcrumbs__link" href="{{ collection.url }}" itemprop="item">
+              <span itemprop="name">{{ collection.title }}</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+          <li class="garden-breadcrumbs__item"
+              itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span class="garden-breadcrumbs__current" itemprop="name" aria-current="page">
+              {{ product.title }}
+            </span>
+            <meta itemprop="item" content="{{ shop.url }}{{ product.url }}">
+            <meta itemprop="position" content="4">
+          </li>
+        {%- else -%}
+          <li class="garden-breadcrumbs__item"
+              itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a class="garden-breadcrumbs__link" href="{{ collection.url }}" itemprop="item">
+              <span itemprop="name">{{ collection.title }}</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+          <li class="garden-breadcrumbs__item"
+              itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <span class="garden-breadcrumbs__current" itemprop="name" aria-current="page">
+              {{ product.title }}
+            </span>
+            <meta itemprop="item" content="{{ shop.url }}{{ product.url }}">
+            <meta itemprop="position" content="3">
+          </li>
+        {%- endif -%}
+      {%- else -%}
+        <li class="garden-breadcrumbs__item"
+            itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <span class="garden-breadcrumbs__current" itemprop="name" aria-current="page">
+            {{ product.title }}
+          </span>
+          <meta itemprop="item" content="{{ shop.url }}{{ product.url }}">
+          <meta itemprop="position" content="2">
+        </li>
+      {%- endif -%}
+
+    {%- elsif collection -%}
+      {%- comment -%} Collection page: Home > Parent? > Collection {%- endcomment -%}
+      {%- if parent_link -%}
+        <li class="garden-breadcrumbs__item"
+            itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a class="garden-breadcrumbs__link" href="{{ parent_link.url }}" itemprop="item">
+            <span itemprop="name">{{ parent_link.title }}</span>
+          </a>
+          <meta itemprop="position" content="2">
+        </li>
+        <li class="garden-breadcrumbs__item"
+            itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <span class="garden-breadcrumbs__current" itemprop="name" aria-current="page">
+            {{ collection.title }}
+          </span>
+          <meta itemprop="item" content="{{ shop.url }}{{ collection.url }}">
+          <meta itemprop="position" content="3">
+        </li>
+      {%- else -%}
+        <li class="garden-breadcrumbs__item"
+            itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <span class="garden-breadcrumbs__current" itemprop="name" aria-current="page">
+            {{ collection.title }}
+          </span>
+          <meta itemprop="item" content="{{ shop.url }}{{ collection.url }}">
+          <meta itemprop="position" content="2">
+        </li>
+      {%- endif -%}
+
+    {%- elsif page -%}
+      {%- comment -%} Static page: Home > Page Title {%- endcomment -%}
+      <li class="garden-breadcrumbs__item"
+          itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span class="garden-breadcrumbs__current" itemprop="name" aria-current="page">
+          {{ page.title }}
+        </span>
+        <meta itemprop="item" content="{{ shop.url }}{{ page.url }}">
+        <meta itemprop="position" content="2">
+      </li>
+
+    {%- endif -%}
+
+  </ol>
+</nav>

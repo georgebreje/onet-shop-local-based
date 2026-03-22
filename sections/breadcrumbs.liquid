@@ -1,0 +1,21 @@
+{%- comment -%}
+  Breadcrumbs section — thin wrapper so the breadcrumbs snippet can be added
+  to any template JSON (collection, product, page) via the theme editor.
+{%- endcomment -%}
+
+{%- render 'breadcrumbs',
+  collection: collection,
+  product: product,
+  page: page
+-%}
+
+{% schema %}
+{
+  "name": "Breadcrumbs",
+  "enabled_on": {
+    "templates": ["collection", "product", "page"]
+  },
+  "settings": [],
+  "presets": []
+}
+{% endschema %}

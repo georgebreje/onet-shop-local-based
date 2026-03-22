@@ -1,0 +1,325 @@
+{%- comment -%}
+  Testimonials — a row of customer testimonials with star ratings.
+  Each block = one testimonial (quote, author, star rating, optional product link).
+  If your store uses a reviews app (Judge.me, Loox, Stamped), you can replace
+  the block markup below with the app's widget embed code.
+{%- endcomment -%}
+
+{%- if section.blocks.size > 0 -%}
+
+<div
+  class="section-background color-{{ section.settings.color_scheme }}"
+  style="padding-block-start: {{ section.settings.padding_top }}px; padding-block-end: {{ section.settings.padding_bottom }}px;"
+></div>
+<div
+  class="section section--page-width color-{{ section.settings.color_scheme }} testimonials-section"
+  style="padding-block-start: {{ section.settings.padding_top }}px; padding-block-end: {{ section.settings.padding_bottom }}px;"
+>
+
+  {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+    <div class="testimonials-section__header">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="testimonials-section__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p class="testimonials-section__subheading">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <ul class="testimonials-section__list" role="list">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'testimonial' -%}
+          <li class="testimonials-section__card" {{ block.shopify_attributes }}>
+
+            {%- comment -%} Star rating {%- endcomment -%}
+            {%- assign rating = block.settings.rating | default: 5 -%}
+            <div class="testimonials-section__stars" aria-label="{{ rating }} din 5 stele" role="img">
+              {%- for i in (1..5) -%}
+                {%- if i <= rating -%}
+                  <svg viewBox="0 0 24 24" fill="currentColor" class="testimonials-section__star testimonials-section__star--filled" aria-hidden="true">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="testimonials-section__star" aria-hidden="true">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+
+            {%- comment -%} Quote {%- endcomment -%}
+            {%- if block.settings.quote != blank -%}
+              <blockquote class="testimonials-section__quote">
+                <p>{{ block.settings.quote }}</p>
+              </blockquote>
+            {%- endif -%}
+
+            {%- comment -%} Author and product {%- endcomment -%}
+            <footer class="testimonials-section__footer">
+              {%- if block.settings.author != blank -%}
+                <cite class="testimonials-section__author">{{ block.settings.author }}</cite>
+              {%- endif -%}
+              {%- if block.settings.product_title != blank -%}
+                {%- if block.settings.product_url != blank -%}
+                  <a class="testimonials-section__product" href="{{ block.settings.product_url }}">
+                    {{ block.settings.product_title }}
+                  </a>
+                {%- else -%}
+                  <span class="testimonials-section__product">{{ block.settings.product_title }}</span>
+                {%- endif -%}
+              {%- endif -%}
+            </footer>
+
+          </li>
+      {%- endcase -%}
+    {%- endfor -%}
+  </ul>
+
+</div>
+
+{%- endif -%}
+
+
+{% stylesheet %}
+
+.testimonials-section__header {
+  text-align: center;
+  margin-block-end: 40px;
+}
+
+.testimonials-section__heading {
+  font-size: clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem);
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--color-foreground-heading, #2B2B2B);
+}
+
+.testimonials-section__subheading {
+  font-size: 0.9375rem;
+  color: var(--color-foreground, #6B6B6B);
+  opacity: 0.75;
+  margin: 0;
+}
+
+.testimonials-section__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media screen and (min-width: 640px) {
+  .testimonials-section__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 990px) {
+  .testimonials-section__list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.testimonials-section__card {
+  background: var(--color-surface, #FFFFFF);
+  border: 1px solid var(--color-border, #E0DBD4);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 1px 4px rgba(59,47,47,0.07);
+  transition: box-shadow 0.2s ease;
+}
+
+.testimonials-section__card:hover {
+  box-shadow: 0 4px 16px rgba(59,47,47,0.1);
+}
+
+.testimonials-section__stars {
+  display: flex;
+  gap: 3px;
+}
+
+.testimonials-section__star {
+  width: 18px;
+  height: 18px;
+}
+
+.testimonials-section__star--filled {
+  color: #E8A838;
+}
+
+.testimonials-section__star:not(.testimonials-section__star--filled) {
+  color: var(--color-border, #E0DBD4);
+}
+
+.testimonials-section__quote {
+  margin: 0;
+  flex: 1;
+}
+
+.testimonials-section__quote p {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--color-foreground, #2B2B2B);
+  font-style: italic;
+  margin: 0;
+}
+
+.testimonials-section__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-block-start: 8px;
+  border-block-start: 1px solid var(--color-border, #E0DBD4);
+}
+
+.testimonials-section__author {
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--color-foreground-heading, #2B2B2B);
+}
+
+.testimonials-section__product {
+  font-size: 0.8125rem;
+  color: var(--color-primary, #4A7C59);
+  text-decoration: none;
+}
+
+a.testimonials-section__product:hover {
+  text-decoration: underline;
+}
+
+{% endstylesheet %}
+
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Ce spun clienții noștri"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Mii de grădinari mulțumiți din întreaga țară"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "t:settings.top_padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "t:settings.bottom_padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "select",
+          "id": "rating",
+          "label": "Star rating",
+          "options": [
+            { "value": "5", "label": "★★★★★ 5 stars" },
+            { "value": "4", "label": "★★★★☆ 4 stars" },
+            { "value": "3", "label": "★★★☆☆ 3 stars" }
+          ],
+          "default": "5"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote",
+          "default": "Uneltele Stiga sunt de o calitate excepțională. Le folosesc de 3 ani și arată ca noi. Recomand cu toată inima!"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Author name",
+          "default": "Maria P."
+        },
+        {
+          "type": "text",
+          "id": "product_title",
+          "label": "Product name (optional)",
+          "default": ""
+        },
+        {
+          "type": "url",
+          "id": "product_url",
+          "label": "Product link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "rating": "5",
+            "quote": "Uneltele Stiga sunt de o calitate excepțională. Le folosesc de 3 ani și arată ca noi. Recomand cu toată inima!",
+            "author": "Maria P.",
+            "product_title": "Foarfecă de grădină Stiga",
+            "product_url": ""
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "rating": "5",
+            "quote": "Livrarea a fost rapidă, produsele bine ambalate. Prețurile sunt corecte pentru calitatea oferită. Voi reveni cu siguranță!",
+            "author": "Ion M.",
+            "product_title": "",
+            "product_url": ""
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "rating": "5",
+            "quote": "Ghidurile incluse sunt extrem de utile pentru un grădinar începător ca mine. Magazinul acesta a devenit preferatul meu.",
+            "author": "Alina C.",
+            "product_title": "",
+            "product_url": ""
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
