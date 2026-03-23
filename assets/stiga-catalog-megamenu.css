@@ -89,14 +89,14 @@
   display: flex !important;
 }
 
-/* ── Subcategory grid ── */
+/* ── Subcategory list — photo left, name right ── */
 .stiga-cmeg__sub-grid {
   list-style: none !important;
   margin: 0;
   padding: 0;
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr)) !important;
-  gap: 10px;
+  display: flex !important;
+  flex-direction: column;
+  gap: 2px;
 }
 
 /* Text-link grid (no images) */
@@ -115,16 +115,16 @@
   overflow: hidden;
 }
 
-/* ── Image card ── */
+/* ── Image list row — photo left, name right ── */
 .stiga-cmeg__sub-card {
   display: flex !important;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 7px;
+  gap: 12px;
   text-decoration: none;
   color: var(--color-foreground, #1a1a1a);
-  padding: 10px 8px;
-  border-radius: 10px;
+  padding: 6px 10px;
+  border-radius: 8px;
   border: 1.5px solid transparent;
   transition: background 0.13s, border-color 0.13s;
 }
@@ -135,8 +135,9 @@
 }
 
 .stiga-cmeg__sub-img-wrap {
-  width: 100%;
-  aspect-ratio: 1;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
   border-radius: 8px;
   overflow: hidden;
   background: #f4f6f4;
@@ -150,7 +151,7 @@
   height: 100%;
   object-fit: contain;
   display: block;
-  padding: 6px;
+  padding: 5px;
 }
 
 .stiga-cmeg__sub-img--empty {
@@ -161,10 +162,12 @@
 }
 
 .stiga-cmeg__sub-name {
-  font-size: 0.72rem;
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
   font-weight: 500;
-  text-align: center;
-  line-height: 1.3;
+  text-align: left;
+  line-height: 1.35;
   word-break: break-word;
 }
 

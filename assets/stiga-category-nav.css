@@ -251,36 +251,38 @@
 }
 
 /* ══════════════════════════════════════════════════════════
-   IMAGE-CARD GRID  (categories with images)
+   IMAGE LIST  (photo left · name right)
 ══════════════════════════════════════════════════════════ */
 
+.snav-cards,
 .snav__sub-grid--cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .snav__sub-card {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1.5px solid transparent;
   text-decoration: none;
   color: var(--color-foreground, #1a1a1a);
-  padding: 10px 8px;
-  border-radius: 10px;
-  border: 1.5px solid transparent;
-  transition: background 0.14s, border-color 0.14s;
+  transition: background 0.13s, border-color 0.13s;
 }
 
 .snav__sub-card:hover {
-  background: rgba(74, 124, 89, 0.06);
+  background: rgba(74, 124, 89, 0.07);
   border-color: rgba(74, 124, 89, 0.2);
 }
 
 .snav__sub-img-wrap {
-  width: 100%;
-  aspect-ratio: 1;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
   border-radius: 8px;
   overflow: hidden;
   background: #f4f6f4;
@@ -294,7 +296,7 @@
   height: 100%;
   object-fit: contain;
   display: block;
-  padding: 6px;
+  padding: 5px;
 }
 
 .snav__sub-img--empty {
@@ -305,9 +307,11 @@
 }
 
 .snav__sub-name {
-  font-size: 0.75rem;
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
   font-weight: 500;
-  text-align: center;
+  text-align: left;
   line-height: 1.35;
   word-break: break-word;
   color: var(--color-foreground, #1a1a1a);

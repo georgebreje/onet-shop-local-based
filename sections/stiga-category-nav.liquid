@@ -100,26 +100,26 @@
               {%- if link.links.size > 0 -%}
 
                 {%- if has_images -%}
-                  {%- comment -%} IMAGE CARD GRID {%- endcomment -%}
-                  <div class="snav-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;">
+                  {%- comment -%} IMAGE LIST — photo left, name right {%- endcomment -%}
+                  <div class="snav-cards" style="display:flex;flex-direction:column;gap:2px;">
                     {%- for child in link.links -%}
-                      <a class="snav__sub-card" href="{{ child.url }}" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-                        <div class="snav__sub-img-wrap" style="width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#f4f6f4;display:flex;align-items:center;justify-content:center;">
+                      <a class="snav__sub-card" href="{{ child.url }}" style="display:flex;flex-direction:row;align-items:center;gap:12px;padding:6px 10px;border-radius:8px;text-decoration:none;">
+                        <div class="snav__sub-img-wrap" style="width:52px;height:52px;flex-shrink:0;border-radius:8px;overflow:hidden;background:#f4f6f4;display:flex;align-items:center;justify-content:center;">
                           {%- if child.object.image -%}
                             {{-
                               child.object.image
-                              | image_url: width: 260
+                              | image_url: width: 104
                               | image_tag:
                                 loading: 'lazy',
                                 class: 'snav__sub-img',
-                                widths: '130, 260',
-                                sizes: '130px'
+                                widths: '52, 104',
+                                sizes: '52px'
                             -}}
                           {%- else -%}
                             <div class="snav__sub-img--empty" style="width:55%;height:55%;background:#dde8e1;border-radius:6px;"></div>
                           {%- endif -%}
                         </div>
-                        <span class="snav__sub-name">{{- child.title -}}</span>
+                        <span class="snav__sub-name" style="flex:1;min-width:0;font-size:0.875rem;font-weight:500;line-height:1.35;text-align:left;word-break:break-word;">{{- child.title -}}</span>
                       </a>
                     {%- endfor -%}
                   </div>
