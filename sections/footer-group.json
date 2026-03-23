@@ -79,7 +79,7 @@
             "align_baseline": false,
             "horizontal_alignment_flex_direction_column": "center",
             "vertical_alignment_flex_direction_column": "center",
-            "gap": 94,
+            "gap": 32,
             "width": "fit-content",
             "custom_width": 100,
             "width_mobile": "fit-content",
@@ -163,6 +163,9 @@
       },
       "block_order": [
         "group_kWWqNV"
+      ],
+      "custom_css": [
+        "img {max-width: 100px;}"
       ],
       "name": "t:names.footer",
       "settings": {
