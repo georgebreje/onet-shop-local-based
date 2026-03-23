@@ -74,13 +74,13 @@
           "settings": {
             "content_direction": "row",
             "vertical_on_mobile": true,
-            "horizontal_alignment": "center",
+            "horizontal_alignment": "space-between",
             "vertical_alignment": "center",
             "align_baseline": false,
             "horizontal_alignment_flex_direction_column": "center",
             "vertical_alignment_flex_direction_column": "center",
-            "gap": 32,
-            "width": "fit-content",
+            "gap": 51,
+            "width": "fill",
             "custom_width": 100,
             "width_mobile": "fit-content",
             "custom_width_mobile": 100,
@@ -107,65 +107,63 @@
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
-          "blocks": {
-            "image_9JKAEt": {
-              "type": "image",
-              "name": "t:names.image",
-              "settings": {
-                "image": "shopify://shop_images/SAL-PICTOGRAMA.png",
-                "link": "https://anpc.ro/ce-este-sal/",
-                "image_ratio": "adapt",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "image_KyWUy7": {
-              "type": "image",
-              "name": "t:names.image",
-              "settings": {
-                "image": "shopify://shop_images/pictogramaSOL.png",
-                "link": "https://consumer-redress.ec.europa.eu/site-relocation_en?event=main.home2.show&lng=RO",
-                "image_ratio": "adapt",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100,
-                "height": "fit",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
+          "blocks": {}
+        },
+        "image_zkCPin": {
+          "type": "image",
+          "name": "t:names.image",
+          "settings": {
+            "image": "shopify://shop_images/pictogramaSOL.png",
+            "link": "https://consumer-redress.ec.europa.eu/site-relocation_en?event=main.home2.show&lng=RO",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fit-content",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
-          "block_order": [
-            "image_9JKAEt",
-            "image_KyWUy7"
-          ]
+          "blocks": {}
+        },
+        "image_eMPYdb": {
+          "type": "image",
+          "name": "t:names.image",
+          "settings": {
+            "image": "shopify://shop_images/SAL-PICTOGRAMA.png",
+            "link": "https://anpc.ro/ce-este-sal/",
+            "image_ratio": "adapt",
+            "width": "fit-content",
+            "custom_width": 100,
+            "width_mobile": "fit-content",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "group_kWWqNV"
+        "group_kWWqNV",
+        "image_zkCPin",
+        "image_eMPYdb"
       ],
       "custom_css": [
-        "img {max-width: 100px;}"
+        "img {max-width: 100px;}",
+        ".footer-content {align-content: center; align-items: center; align-self: center;}"
       ],
       "name": "t:names.footer",
       "settings": {
