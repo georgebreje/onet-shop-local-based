@@ -88,15 +88,16 @@
               class="snav__sub{% if forloop.first %} snav__sub--active{% endif %}"
               data-snav-panel="{{ forloop.index0 }}"
               aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+              style="{% unless forloop.first %}display:none;{% endunless %}"
             >
               {%- if link.links.size > 0 -%}
 
                 {%- if has_images -%}
                   {%- comment -%} IMAGE CARD GRID {%- endcomment -%}
-                  <div class="snav__sub-grid snav__sub-grid--cards">
+                  <div class="snav-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;">
                     {%- for child in link.links -%}
-                      <a class="snav__sub-card" href="{{ child.url }}">
-                        <div class="snav__sub-img-wrap">
+                      <a class="snav__sub-card" href="{{ child.url }}" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                        <div class="snav__sub-img-wrap" style="width:100%;aspect-ratio:1;border-radius:8px;overflow:hidden;background:#f4f6f4;display:flex;align-items:center;justify-content:center;">
                           {%- if child.object.image -%}
                             {{-
                               child.object.image
@@ -108,7 +109,7 @@
                                 sizes: '130px'
                             -}}
                           {%- else -%}
-                            <div class="snav__sub-img--empty"></div>
+                            <div class="snav__sub-img--empty" style="width:55%;height:55%;background:#dde8e1;border-radius:6px;"></div>
                           {%- endif -%}
                         </div>
                         <span class="snav__sub-name">{{- child.title -}}</span>
@@ -117,15 +118,15 @@
                   </div>
 
                 {%- else -%}
-                  {%- comment -%} TEXT LINK GRID (no images) {%- endcomment -%}
+                  {%- comment -%} TEXT LINK GRID — inline styles guarantee layout regardless of any theme CSS overrides {%- endcomment -%}
                   <p class="snav__sub-heading">Subcategorii</p>
-                  <div class="snav__sub-grid snav__sub-grid--links">
+                  <div class="snav-links" style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px 8px;width:100%;">
                     {%- for child in link.links -%}
-                      <div>
-                        <a class="snav__sub-link" href="{{ child.url }}">
-                          <span class="snav__sub-link__dot"></span>
-                          <span class="snav__sub-link__text">{{- child.title -}}</span>
-                          <svg class="snav__sub-link__arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                      <div style="display:block;min-width:0;overflow:hidden;">
+                        <a class="snav__sub-link" href="{{ child.url }}" style="display:flex;align-items:center;gap:10px;width:100%;min-width:0;padding:9px 12px;text-decoration:none;border-radius:7px;box-sizing:border-box;">
+                          <span class="snav__sub-link__dot" style="flex-shrink:0;width:6px;height:6px;border-radius:50%;background:currentColor;opacity:0.25;"></span>
+                          <span class="snav__sub-link__text" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{- child.title -}}</span>
+                          <svg class="snav__sub-link__arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="flex-shrink:0;opacity:0;transition:opacity 0.13s,transform 0.13s;color:#4a7c59;">
                             <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
                         </a>
@@ -321,6 +322,12 @@
         const active = i === idx;
         panel.classList.toggle('snav__sub--active', active);
         panel.setAttribute('aria-hidden', active ? 'false' : 'true');
+        // Inline style guarantees visibility regardless of any theme CSS override
+        panel.style.display = active ? 'flex' : 'none';
+        if (active) {
+          panel.style.flexDirection = 'column';
+          panel.style.gap = '18px';
+        }
       });
       this.catItems.forEach((item, i) => {
         item.classList.toggle('snav__cat--active', i === idx);
