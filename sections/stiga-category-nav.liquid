@@ -2,17 +2,20 @@
   stiga-category-nav.liquid
 
   Desktop (≥ 990 px):
-    A slim nav bar with a single "Toate categoriile" trigger.
-    Clicking it opens a full-width two-panel mega-menu:
-      • Left  — vertical list of every top-level category; hover switches the right panel.
-      • Right — grid of subcategory image cards for the active category.
+    Slim nav bar with "Toate categoriile" trigger.
+    Opens a full-width two-panel mega-menu:
+      • Left  — vertical category list; hover switches the right panel.
+      • Right — grid of subcategory links (text or image cards).
 
   Mobile (< 990 px):
-    A full-width trigger bar that opens a right-side sheet drawer.
-    Each top-level category is an accordion item with its subcategories listed below.
+    Full-width trigger that opens a right-side sheet drawer.
+    Each category is an accordion with its children listed below.
 
   Data source: linklists['stiga-categorii'] — never hardcoded.
+  CSS:         assets/stiga-category-nav.css — loaded via stylesheet_tag.
 {% endcomment %}
+
+{{ 'stiga-category-nav.css' | asset_url | stylesheet_tag }}
 
 {%- assign stiga_menu = linklists['stiga-categorii'] -%}
 {%- if stiga_menu == blank or stiga_menu.links.size == 0 -%}
@@ -20,13 +23,13 @@
 {%- else -%}
 
 <nav
-  class="snav color-{{ section.settings.color_scheme }}"
+  class="snav"
   id="snav"
   aria-label="Navigare categorii produse"
 >
 
   {%- comment -%}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ DESKTOP BAR ━━━━━{%- endcomment -%}
-  <div class="snav__bar" aria-hidden="true">
+  <div class="snav__bar">
     <div class="snav__bar-inner">
       <button
         class="snav__trigger"
@@ -35,7 +38,6 @@
         aria-expanded="false"
         aria-controls="snav-mega"
       >
-        {%- comment -%} 2×2 grid icon {%- endcomment -%}
         <svg class="snav__trigger-icon" width="15" height="15" viewBox="0 0 15 15" fill="currentColor" aria-hidden="true">
           <rect x="0"   y="0"   width="6.5" height="6.5" rx="1.2"/>
           <rect x="8.5" y="0"   width="6.5" height="6.5" rx="1.2"/>
@@ -49,7 +51,7 @@
       </button>
     </div>
 
-    {%- comment -%}────────────── TWO-PANEL MEGA-MENU ──────────────{%- endcomment -%}
+    {%- comment -%}── TWO-PANEL MEGA-MENU ──{%- endcomment -%}
     <div class="snav__mega" id="snav-mega" aria-hidden="true">
       <div class="snav__mega-inner">
 
@@ -76,66 +78,60 @@
         {%- comment -%} Right column — subcategory panels {%- endcomment -%}
         <div class="snav__subs">
           {%- for link in stiga_menu.links -%}
-            {%- comment -%} Detect whether any child in this group has an image {%- endcomment -%}
+
             {%- assign has_images = false -%}
             {%- for child in link.links -%}
-              {%- if child.object.image -%}
-                {%- assign has_images = true -%}
-              {%- endif -%}
+              {%- if child.object.image -%}{%- assign has_images = true -%}{%- endif -%}
             {%- endfor -%}
 
             <div
               class="snav__sub{% if forloop.first %} snav__sub--active{% endif %}"
               data-snav-panel="{{ forloop.index0 }}"
-              aria-hidden="{{ forloop.first | map: 'false' | default: 'true' }}"
+              aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
             >
               {%- if link.links.size > 0 -%}
 
                 {%- if has_images -%}
-                  {%- comment -%} ── IMAGE CARD GRID ── {%- endcomment -%}
-                  <ul class="snav__sub-grid snav__sub-grid--cards" role="list">
+                  {%- comment -%} IMAGE CARD GRID {%- endcomment -%}
+                  <div class="snav__sub-grid snav__sub-grid--cards">
                     {%- for child in link.links -%}
-                      <li>
-                        <a class="snav__sub-card" href="{{ child.url }}">
-                          <div class="snav__sub-img-wrap">
-                            {%- if child.object.image -%}
-                              {{-
-                                child.object.image
-                                | image_url: width: 260
-                                | image_tag:
-                                  loading: 'lazy',
-                                  class: 'snav__sub-img',
-                                  widths: '130, 260',
-                                  sizes: '130px'
-                              -}}
-                            {%- else -%}
-                              <div class="snav__sub-img snav__sub-img--empty"></div>
-                            {%- endif -%}
-                          </div>
-                          <span class="snav__sub-name">{{- child.title -}}</span>
-                        </a>
-                      </li>
+                      <a class="snav__sub-card" href="{{ child.url }}">
+                        <div class="snav__sub-img-wrap">
+                          {%- if child.object.image -%}
+                            {{-
+                              child.object.image
+                              | image_url: width: 260
+                              | image_tag:
+                                loading: 'lazy',
+                                class: 'snav__sub-img',
+                                widths: '130, 260',
+                                sizes: '130px'
+                            -}}
+                          {%- else -%}
+                            <div class="snav__sub-img--empty"></div>
+                          {%- endif -%}
+                        </div>
+                        <span class="snav__sub-name">{{- child.title -}}</span>
+                      </a>
                     {%- endfor -%}
-                  </ul>
+                  </div>
 
                 {%- else -%}
-                  {%- comment -%} ── TEXT LINK LIST (no images) ── {%- endcomment -%}
+                  {%- comment -%} TEXT LINK GRID (no images) {%- endcomment -%}
                   <p class="snav__sub-heading">Subcategorii</p>
-                  <ul class="snav__sub-grid snav__sub-grid--links" role="list">
+                  <div class="snav__sub-grid snav__sub-grid--links">
                     {%- for child in link.links -%}
-                      <li>
+                      <div>
                         <a class="snav__sub-link" href="{{ child.url }}">
-                          <svg class="snav__sub-link-dot" width="6" height="6" viewBox="0 0 6 6" fill="currentColor" aria-hidden="true" style="flex-shrink:0;opacity:0.35;border-radius:50%">
-                            <circle cx="3" cy="3" r="3"/>
-                          </svg>
-                          <span>{{- child.title -}}</span>
-                          <svg class="snav__sub-link-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                          <span class="snav__sub-link__dot"></span>
+                          <span class="snav__sub-link__text">{{- child.title -}}</span>
+                          <svg class="snav__sub-link__arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                             <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
                         </a>
-                      </li>
+                      </div>
                     {%- endfor -%}
-                  </ul>
+                  </div>
                 {%- endif -%}
 
               {%- endif -%}
@@ -152,11 +148,11 @@
 
       </div>
     </div>
-  </div>{%- comment -%} end .snav__bar {%- endcomment -%}
+  </div>
 
 
   {%- comment -%}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ MOBILE BAR ━━━━━{%- endcomment -%}
-  <div class="snav__mob-bar" aria-hidden="true">
+  <div class="snav__mob-bar">
     <button
       class="snav__mob-btn"
       type="button"
@@ -238,516 +234,6 @@
 {%- endif -%}
 
 
-{% stylesheet %}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ BASE */
-
-.snav {
-  position: relative;
-  /* Sit above page content; below the main header which controls its own z-index */
-  z-index: 90;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ DESKTOP BAR */
-
-.snav__bar {
-  display: none; /* shown via @media below */
-  border-top: 1px solid var(--color-border, rgba(0,0,0,.08));
-}
-
-.snav__bar-inner {
-  display: flex;
-  align-items: center;
-  max-width: var(--page-width, 1440px);
-  margin-inline: auto;
-  padding-inline: var(--page-margin, 20px);
-  height: 44px;
-}
-
-/* ── Trigger button ── */
-.snav__trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 14px;
-  height: 32px;
-  background: transparent;
-  border: 1.5px solid var(--color-border, rgba(0,0,0,.15));
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-foreground);
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
-  white-space: nowrap;
-}
-
-.snav__trigger:hover,
-.snav__trigger[aria-expanded="true"] {
-  background: var(--color-primary, #4A7C59);
-  border-color: var(--color-primary, #4A7C59);
-  color: #fff;
-}
-
-.snav__trigger-icon {
-  flex-shrink: 0;
-}
-
-.snav__trigger-caret {
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
-}
-
-.snav__trigger[aria-expanded="true"] .snav__trigger-caret {
-  transform: rotate(180deg);
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ MEGA-MENU */
-
-.snav__mega {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: var(--color-background, #fff);
-  border-top: 1px solid var(--color-border, rgba(0,0,0,.08));
-  border-bottom: 1px solid var(--color-border, rgba(0,0,0,.08));
-  box-shadow: 0 16px 48px rgba(0,0,0,.10);
-  z-index: 100;
-  /* Animation */
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-6px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.snav__mega[aria-hidden="false"] {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-.snav__mega-inner {
-  display: flex;
-  max-width: var(--page-width, 1440px);
-  margin-inline: auto;
-  padding-inline: var(--page-margin, 20px);
-  min-height: 320px;
-  max-height: 70vh;
-}
-
-/* ── Left: category list ── */
-.snav__cats {
-  list-style: none;
-  margin: 0;
-  padding: 12px 0;
-  width: 240px;
-  flex-shrink: 0;
-  border-right: 1px solid var(--color-border, rgba(0,0,0,.08));
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-
-.snav__cat-link {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 9px 16px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-decoration: none;
-  color: var(--color-foreground);
-  border-radius: 6px;
-  margin-inline: 8px;
-  transition: background 0.12s;
-}
-
-.snav__cat-link:hover,
-.snav__cat--active .snav__cat-link {
-  background: var(--color-border, rgba(0,0,0,.05));
-}
-
-.snav__cat--active .snav__cat-link {
-  font-weight: 700;
-  color: var(--color-primary, #4A7C59);
-  background: var(--color-border, rgba(0,0,0,.05));
-}
-
-.snav__cat-arrow {
-  flex-shrink: 0;
-  opacity: 0.4;
-  transition: opacity 0.12s;
-}
-
-.snav__cat--active .snav__cat-arrow,
-.snav__cat-link:hover .snav__cat-arrow {
-  opacity: 0.8;
-}
-
-/* ── Right: sub-panels ── */
-.snav__subs {
-  flex: 1;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: 20px 24px 24px;
-  position: relative;
-}
-
-.snav__sub {
-  display: none;
-}
-
-.snav__sub--active {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* ── Subcategory grid: image-card variant ── */
-.snav__sub-grid {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.snav__sub-grid--cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 8px;
-}
-
-/* ── Subcategory grid: text-link variant (no images) ── */
-.snav__sub-grid--links {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
-}
-
-.snav__sub-grid--links > li {
-  min-width: 0;
-}
-
-.snav__sub-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  min-width: 0;
-  padding: 10px 14px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-decoration: none;
-  color: var(--color-foreground);
-  border-radius: 6px;
-  transition: background 0.12s, color 0.12s;
-  word-break: break-word;
-  box-sizing: border-box;
-}
-
-.snav__sub-link:hover {
-  background: rgba(74,124,89,.08);
-  color: var(--color-primary, #4A7C59);
-}
-
-.snav__sub-link-arrow {
-  flex-shrink: 0;
-  color: var(--color-primary, #4A7C59);
-  opacity: 0;
-  transition: opacity 0.12s, transform 0.12s;
-  margin-left: auto;
-}
-
-.snav__sub-link:hover .snav__sub-link-arrow {
-  opacity: 1;
-  transform: translateX(2px);
-}
-
-/* ── Text-link section title ── */
-.snav__sub-heading {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-foreground);
-  opacity: 0.4;
-  padding: 0 4px 6px;
-  border-bottom: 1px solid var(--color-border, rgba(0,0,0,.08));
-  margin-bottom: 4px;
-}
-
-/* ── Image card ── */
-.snav__sub-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 7px;
-  text-decoration: none;
-  color: var(--color-foreground);
-  padding: 8px;
-  border-radius: 8px;
-  transition: background 0.14s;
-}
-
-.snav__sub-card:hover {
-  background: var(--color-border, rgba(0,0,0,.04));
-}
-
-.snav__sub-img-wrap {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 6px;
-  overflow: hidden;
-  background: var(--color-background-2, #f5f5f5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.snav__sub-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-  padding: 4px;
-}
-
-.snav__sub-img--empty {
-  width: 60%;
-  height: 60%;
-  background: var(--color-border, #ddd);
-  border-radius: 4px;
-}
-
-.snav__sub-name {
-  font-size: 0.75rem;
-  font-weight: 500;
-  text-align: center;
-  line-height: 1.35;
-  color: var(--color-foreground);
-  word-break: break-word;
-}
-
-.snav__sub-all {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8125rem;
-  font-weight: 700;
-  text-decoration: none;
-  color: var(--color-primary, #4A7C59);
-  padding: 7px 10px;
-  border: 1.5px solid var(--color-primary, #4A7C59);
-  border-radius: 6px;
-  align-self: flex-start;
-  transition: background 0.15s, color 0.15s;
-}
-
-.snav__sub-all:hover {
-  background: var(--color-primary, #4A7C59);
-  color: #fff;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ MOBILE BAR */
-
-.snav__mob-bar {
-  border-top: 1px solid var(--color-border, rgba(0,0,0,.08));
-}
-
-.snav__mob-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  padding: 11px 20px;
-  background: transparent;
-  border: none;
-  font-family: inherit;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-foreground);
-  cursor: pointer;
-  text-align: left;
-}
-
-.snav__mob-caret {
-  margin-left: auto;
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
-}
-
-.snav__mob-btn[aria-expanded="true"] .snav__mob-caret {
-  transform: rotate(180deg);
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ MOBILE SHEET */
-
-.snav-sheet {
-  position: fixed;
-  inset: 0 0 0 auto;
-  width: min(380px, 100vw);
-  background: var(--color-background, #fff);
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  transform: translateX(100%);
-  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  box-shadow: -4px 0 32px rgba(0,0,0,.12);
-}
-
-.snav-sheet[aria-hidden="false"] {
-  transform: translateX(0);
-}
-
-.snav-sheet__hd {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--color-border, rgba(0,0,0,.08));
-  position: sticky;
-  top: 0;
-  background: inherit;
-  z-index: 1;
-  flex-shrink: 0;
-}
-
-.snav-sheet__title {
-  font-size: 1rem;
-  font-weight: 700;
-}
-
-.snav-sheet__close {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background: none;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  color: var(--color-foreground);
-  transition: background 0.15s;
-}
-
-.snav-sheet__close:hover {
-  background: var(--color-border, rgba(0,0,0,.06));
-}
-
-.snav-sheet__list {
-  list-style: none;
-  margin: 0;
-  padding: 8px 0 32px;
-  flex: 1;
-}
-
-.snav-sheet__item {
-  border-bottom: 1px solid var(--color-border, rgba(0,0,0,.06));
-}
-
-.snav-sheet__acc {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 14px 20px;
-  background: none;
-  border: none;
-  font-family: inherit;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-foreground);
-  cursor: pointer;
-  text-align: left;
-}
-
-.snav-sheet__chevron {
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
-  opacity: 0.5;
-}
-
-.snav-sheet__acc[aria-expanded="true"] .snav-sheet__chevron {
-  transform: rotate(180deg);
-  opacity: 1;
-}
-
-.snav-sheet__sub {
-  list-style: none;
-  margin: 0;
-  padding: 0 0 6px;
-  background: rgba(0,0,0,.02);
-}
-
-.snav-sheet__link {
-  display: block;
-  padding: 9px 20px 9px 32px;
-  font-size: 0.875rem;
-  text-decoration: none;
-  color: var(--color-foreground);
-  transition: color 0.12s;
-}
-
-.snav-sheet__link:hover {
-  color: var(--color-primary, #000);
-}
-
-.snav-sheet__item > .snav-sheet__link {
-  /* Top-level leaf links (no children) */
-  padding-left: 20px;
-  font-weight: 600;
-  font-size: 0.9375rem;
-}
-
-.snav-sheet__link--all {
-  padding-left: 20px;
-  font-weight: 700;
-  font-size: 0.875rem;
-  color: var(--color-primary, #000);
-  border-bottom: 1px solid var(--color-border, rgba(0,0,0,.06));
-  padding-bottom: 10px;
-  margin-bottom: 2px;
-}
-
-.snav-sheet__link--child {
-  color: rgba(var(--color-foreground-rgb, 0,0,0), 0.72);
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ OVERLAY */
-
-.snav-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.45);
-  z-index: 9998;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.28s ease;
-}
-
-.snav-overlay[aria-hidden="false"] {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ RESPONSIVE */
-
-@media screen and (min-width: 990px) {
-  .snav__bar     { display: block; }
-  .snav__mob-bar { display: none; }
-}
-
-@media screen and (max-width: 989px) {
-  .snav__bar { display: none; }
-}
-
-{% endstylesheet %}
-
-
 {% javascript %}
 
 (function () {
@@ -755,38 +241,39 @@
 
   class StigaNav {
     constructor(nav) {
-      this.nav     = nav;
-      this.trigger = nav.querySelector('.snav__trigger');
-      this.mega    = nav.querySelector('.snav__mega');
+      this.nav      = nav;
+      this.trigger  = nav.querySelector('.snav__trigger');
+      this.mega     = nav.querySelector('.snav__mega');
       this.catLinks = Array.from(nav.querySelectorAll('[data-snav-cat-idx]'));
       this.catItems = Array.from(nav.querySelectorAll('[data-snav-cat]'));
       this.panels   = Array.from(nav.querySelectorAll('[data-snav-panel]'));
 
-      this.mobBtn   = nav.querySelector('.snav__mob-btn');
-      this.sheet    = nav.querySelector('.snav-sheet');
+      this.mobBtn     = nav.querySelector('.snav__mob-btn');
+      this.sheet      = nav.querySelector('.snav-sheet');
       this.sheetClose = nav.querySelector('.snav-sheet__close');
-      this.overlay  = nav.querySelector('.snav-overlay');
-      this.accBtns  = Array.from(nav.querySelectorAll('.snav-sheet__acc'));
+      this.overlay    = nav.querySelector('.snav-overlay');
+      this.accBtns    = Array.from(nav.querySelectorAll('.snav-sheet__acc'));
 
       this._closeDelay = null;
       this._init();
     }
 
     _init() {
-      /* ── Desktop: open/close mega ── */
+      /* Desktop: toggle mega on trigger click */
       this.trigger?.addEventListener('click', () => this._toggleMega());
 
-      /* Keep mega open while hovering inside it */
+      /* Keep mega open while mouse is inside */
       this.mega?.addEventListener('mouseenter', () => clearTimeout(this._closeDelay));
       this.mega?.addEventListener('mouseleave', () => {
-        this._closeDelay = setTimeout(() => this._closeMega(), 120);
+        this._closeDelay = setTimeout(() => this._closeMega(), 150);
       });
-      this.nav.querySelector('.snav__bar')?.addEventListener('mouseleave', () => {
-        this._closeDelay = setTimeout(() => this._closeMega(), 120);
+      const bar = this.nav.querySelector('.snav__bar');
+      bar?.addEventListener('mouseleave', () => {
+        this._closeDelay = setTimeout(() => this._closeMega(), 150);
       });
-      this.nav.querySelector('.snav__bar')?.addEventListener('mouseenter', () => clearTimeout(this._closeDelay));
+      bar?.addEventListener('mouseenter', () => clearTimeout(this._closeDelay));
 
-      /* ── Desktop: hover a category link → switch sub-panel ── */
+      /* Hover a category → switch panel */
       this.catLinks.forEach(link => {
         link.addEventListener('mouseenter', () => {
           const idx = parseInt(link.dataset.snavCatIdx, 10);
@@ -794,34 +281,28 @@
         });
       });
 
-      /* ── Close mega on outside click ── */
+      /* Close on outside click */
       document.addEventListener('click', e => {
         if (this.mega && !this.nav.contains(e.target)) this._closeMega();
       });
 
-      /* ── Mobile: open sheet ── */
+      /* Mobile */
       this.mobBtn?.addEventListener('click', () => this._openSheet());
-
-      /* ── Mobile: close sheet ── */
       this.sheetClose?.addEventListener('click', () => this._closeSheet());
       this.overlay?.addEventListener('click', () => this._closeSheet());
-
-      /* ── Mobile: accordion ── */
       this.accBtns.forEach(btn => btn.addEventListener('click', () => this._toggleAcc(btn)));
 
-      /* ── ESC ── */
+      /* ESC */
       document.addEventListener('keydown', e => {
         if (e.key === 'Escape') { this._closeMega(); this._closeSheet(); }
       });
 
-      /* Show the first panel by default so there's immediate content on open */
       this._switchPanel(0);
     }
 
-    /* ── Mega helpers ── */
     _toggleMega() {
-      const open = this.mega?.getAttribute('aria-hidden') !== 'false';
-      open ? this._openMega() : this._closeMega();
+      const isOpen = this.mega?.getAttribute('aria-hidden') === 'false';
+      isOpen ? this._closeMega() : this._openMega();
     }
 
     _openMega() {
@@ -846,7 +327,6 @@
       });
     }
 
-    /* ── Sheet helpers ── */
     _openSheet() {
       this.sheet?.setAttribute('aria-hidden', 'false');
       this.overlay?.setAttribute('aria-hidden', 'false');
@@ -862,17 +342,14 @@
       document.body.style.overflow = '';
     }
 
-    /* ── Accordion ── */
     _toggleAcc(btn) {
       const expanded = btn.getAttribute('aria-expanded') === 'true';
-      const subId = btn.getAttribute('aria-controls');
-      const sub = document.getElementById(subId);
+      const sub = document.getElementById(btn.getAttribute('aria-controls'));
       btn.setAttribute('aria-expanded', String(!expanded));
       if (sub) sub.hidden = expanded;
     }
   }
 
-  /* Boot */
   const boot = () => {
     const el = document.getElementById('snav');
     if (el) new StigaNav(el);
@@ -894,14 +371,7 @@
   "enabled_on": {
     "groups": ["header"]
   },
-  "settings": [
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:settings.color_scheme",
-      "default": "scheme-1"
-    }
-  ],
+  "settings": [],
   "presets": []
 }
 {% endschema %}
