@@ -1,55 +1,200 @@
 {% comment %}
-  Renders child collections for the current collection, sourced from the stiga-categorii menu.
-  Only renders when the current collection has children in that menu.
+  Renders context-aware collection navigation sourced from the stiga-categorii menu.
+
+  Displays up to three pieces of hierarchy UI:
+    1. Sibling navigation row — visible when current collection is a child category.
+       Shows a ← back link to the parent and pill-style links to all siblings,
+       with the current one highlighted.
+    2. Subcategory grid — visible when the current collection has children in the menu.
+       Shows image-cards linking to each child collection.
+
   Do not hardcode handles — the menu is the single source of truth.
 {% endcomment %}
 
 {% assign stiga_menu = linklists['stiga-categorii'] %}
-{% assign child_links = nil %}
+{% assign child_links  = nil %}
+{% assign parent_link  = nil %}
+{% assign sibling_links = nil %}
+{% assign is_top_level = false %}
 
 {% for top_link in stiga_menu.links %}
   {% assign top_handle = top_link.url | split: '/collections/' | last | split: '?' | first | split: '/' | first %}
   {% if top_handle == collection.handle %}
-    {% assign child_links = top_link.links %}
+    {% assign child_links  = top_link.links %}
+    {% assign is_top_level = true %}
   {% else %}
     {% for child_link in top_link.links %}
       {% assign child_handle = child_link.url | split: '/collections/' | last | split: '?' | first | split: '/' | first %}
       {% if child_handle == collection.handle %}
-        {% assign child_links = child_link.links %}
+        {% assign child_links   = child_link.links %}
+        {% assign parent_link   = top_link %}
+        {% assign sibling_links = top_link.links %}
       {% endif %}
     {% endfor %}
   {% endif %}
 {% endfor %}
 
-{% if child_links.size > 0 %}
+{% assign show_siblings = false %}
+{% if parent_link != nil and sibling_links.size > 1 %}
+  {% assign show_siblings = true %}
+{% endif %}
+
+{% if show_siblings or child_links.size > 0 %}
   <div class="section-background color-{{ section.settings.color_scheme }}"></div>
   <div class="section section--page-width color-{{ section.settings.color_scheme }} stiga-subcollections">
-    <div class="stiga-subcollections__grid">
-      {% for child in child_links %}
-        <a href="{{ child.url }}" class="stiga-subcollections__card">
-          {% if child.object.image %}
-            {{
-              child.object.image
-              | image_url: width: 400
-              | image_tag:
-                loading: 'lazy',
-                class: 'stiga-subcollections__image',
-                widths: '200, 400',
-                sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw'
-            }}
-          {% else %}
-            <div class="stiga-subcollections__image stiga-subcollections__image--placeholder"></div>
-          {% endif %}
-          <span class="stiga-subcollections__title">{{ child.title }}</span>
+
+    {% comment %} ── 1. Sibling navigation (only when inside a child category) ── {% endcomment %}
+    {% if show_siblings %}
+      <div class="stiga-sub__sibling-nav">
+        <a href="{{ parent_link.url }}" class="stiga-sub__back-link">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          {{ parent_link.title }}
         </a>
-      {% endfor %}
-    </div>
+        <div class="stiga-sub__pills-wrap" role="list" aria-label="Subcategorii {{ parent_link.title }}">
+          {% for sib in sibling_links %}
+            {% assign sib_handle = sib.url | split: '/collections/' | last | split: '?' | first | split: '/' | first %}
+            <a
+              href="{{ sib.url }}"
+              class="stiga-sub__pill{% if sib_handle == collection.handle %} stiga-sub__pill--active{% endif %}"
+              role="listitem"
+              {% if sib_handle == collection.handle %}aria-current="page"{% endif %}
+            >
+              {{ sib.title }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% comment %} ── 2. Child collection grid ── {% endcomment %}
+    {% if child_links.size > 0 %}
+      <div class="stiga-sub__grid-wrap">
+        <p class="stiga-sub__heading">Subcategorii</p>
+        <div class="stiga-subcollections__grid">
+          {% for child in child_links %}
+            <a href="{{ child.url }}" class="stiga-subcollections__card">
+              {% if child.object.image %}
+                {{
+                  child.object.image
+                  | image_url: width: 400
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'stiga-subcollections__image',
+                    widths: '200, 400',
+                    sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw'
+                }}
+              {% else %}
+                <div class="stiga-subcollections__image stiga-subcollections__image--placeholder"></div>
+              {% endif %}
+              <span class="stiga-subcollections__title">{{ child.title }}</span>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
   </div>
 {% endif %}
 
 {% stylesheet %}
+  /* ── Section wrapper ── */
   .stiga-subcollections {
-    padding-block: 24px;
+    padding-block: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ══ Sibling navigation ══ */
+  .stiga-sub__sibling-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .stiga-sub__back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-primary, #4a7c59);
+    text-decoration: none;
+    width: fit-content;
+    padding: 4px 0;
+    transition: opacity 0.12s;
+  }
+
+  .stiga-sub__back-link:hover {
+    opacity: 0.75;
+  }
+
+  .stiga-sub__pills-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-block-end: 4px;
+    /* horizontal scroll on very small screens */
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .stiga-sub__pills-wrap::-webkit-scrollbar { display: none; }
+
+  .stiga-sub__pill {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    padding: 6px 14px;
+    border: 1.5px solid var(--color-border, #e0e0e0);
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-foreground, #1a1a1a);
+    text-decoration: none;
+    background: transparent;
+    transition: background 0.14s, border-color 0.14s, color 0.14s;
+    flex-shrink: 0;
+  }
+
+  .stiga-sub__pill:hover {
+    background: rgba(74, 124, 89, 0.07);
+    border-color: var(--color-primary, #4a7c59);
+    color: var(--color-primary, #4a7c59);
+  }
+
+  .stiga-sub__pill--active {
+    background: var(--color-primary, #4a7c59);
+    border-color: var(--color-primary, #4a7c59);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .stiga-sub__pill--active:hover {
+    background: var(--color-primary, #4a7c59);
+    color: #fff;
+    opacity: 0.9;
+  }
+
+  /* ══ Subcategory grid ══ */
+  .stiga-sub__grid-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .stiga-sub__heading {
+    margin: 0;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--color-foreground, #1a1a1a);
+    opacity: 0.4;
   }
 
   .stiga-subcollections__grid {
@@ -79,11 +224,12 @@
     border-radius: var(--card-corner-radius, 4px);
     overflow: hidden;
     border: 1px solid var(--color-border, #e6e6e6);
-    transition: box-shadow 0.2s ease;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
   .stiga-subcollections__card:hover {
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--color-primary, #4a7c59);
   }
 
   .stiga-subcollections__image {

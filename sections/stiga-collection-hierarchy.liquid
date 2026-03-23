@@ -34,6 +34,20 @@
             <div class="stiga-hierarchy__card-image stiga-hierarchy__card-image--placeholder"></div>
           {% endif %}
         </div>
+        {% if top_link.links.size > 0 %}
+          <div class="stiga-hierarchy__card-subs">
+            {% assign preview_count = 0 %}
+            {% for sub in top_link.links %}
+              {% if preview_count < 4 %}
+                <span class="stiga-hierarchy__card-sub-name">{{ sub.title }}</span>
+                {% assign preview_count = preview_count | plus: 1 %}
+              {% endif %}
+            {% endfor %}
+            {% if top_link.links.size > 4 %}
+              <span class="stiga-hierarchy__card-sub-more">+{{ top_link.links.size | minus: 4 }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
         <div class="stiga-hierarchy__card-footer">
           <span class="stiga-hierarchy__card-btn">{{ section.settings.button_label }}</span>
         </div>
@@ -104,6 +118,40 @@
     width: 100%;
     aspect-ratio: 4 / 3;
     background-color: var(--color-border, #e6e6e6);
+  }
+
+  .stiga-hierarchy__card-subs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-block-start: 14px;
+    justify-content: center;
+  }
+
+  .stiga-hierarchy__card-sub-name {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-foreground, #1a1a1a);
+    opacity: 0.55;
+    padding: 3px 9px;
+    border: 1px solid var(--color-border, #e0e0e0);
+    border-radius: 999px;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+
+  .stiga-hierarchy__card-sub-more {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-primary, #4a7c59);
+    opacity: 0.8;
+    padding: 3px 9px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    white-space: nowrap;
+    line-height: 1.4;
   }
 
   .stiga-hierarchy__card-footer {

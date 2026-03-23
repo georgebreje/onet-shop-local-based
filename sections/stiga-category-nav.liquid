@@ -26,6 +26,7 @@
   class="snav"
   id="snav"
   aria-label="Navigare categorii produse"
+  {%- if request.page_type == 'collection' %} data-active-handle="{{ collection.handle }}"{% endif %}
 >
 
   {%- comment -%}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ DESKTOP BAR ━━━━━{%- endcomment -%}
@@ -58,7 +59,13 @@
         {%- comment -%} Left column — category list {%- endcomment -%}
         <ul class="snav__cats" role="list">
           {%- for link in stiga_menu.links -%}
-            <li class="snav__cat{% if forloop.first %} snav__cat--active{% endif %}" data-snav-cat="{{ forloop.index0 }}">
+            {%- assign _top_h = link.url | split: '/collections/' | last | split: '?' | first | split: '/' | first -%}
+            {%- assign _handles = _top_h -%}
+            {%- for _ch in link.links -%}
+              {%- assign _chh = _ch.url | split: '/collections/' | last | split: '?' | first | split: '/' | first -%}
+              {%- assign _handles = _handles | append: ',' | append: _chh -%}
+            {%- endfor -%}
+            <li class="snav__cat{% if forloop.first %} snav__cat--active{% endif %}" data-snav-cat="{{ forloop.index0 }}" data-handles="{{ _handles }}">
               <a
                 class="snav__cat-link"
                 href="{{ link.url }}"
@@ -260,8 +267,9 @@
     }
 
     _init() {
-      /* Desktop: toggle mega on trigger click */
+      /* Desktop: toggle mega on trigger click; open on hover */
       this.trigger?.addEventListener('click', () => this._toggleMega());
+      this.trigger?.addEventListener('mouseenter', () => this._openMega());
 
       /* Keep mega open while mouse is inside */
       this.mega?.addEventListener('mouseenter', () => clearTimeout(this._closeDelay));
@@ -299,6 +307,18 @@
       });
 
       this._switchPanel(0);
+      this._activateCurrentPage();
+    }
+
+    _activateCurrentPage() {
+      const handle = this.nav.dataset.activeHandle;
+      if (!handle) return;
+      let matched = -1;
+      this.catItems.forEach((item, i) => {
+        const handles = (item.dataset.handles || '').split(',');
+        if (handles.includes(handle)) matched = i;
+      });
+      if (matched >= 0) this._switchPanel(matched);
     }
 
     _toggleMega() {
