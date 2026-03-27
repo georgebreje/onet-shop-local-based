@@ -70,8 +70,8 @@
           "settings": {
             "label": "Explorează produsele",
             "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button-primary",
+            "open_in_new_tab": true,
+            "style_class": "button-secondary",
             "width": "fit-content",
             "custom_width": 100,
             "width_mobile": "fit-content",
