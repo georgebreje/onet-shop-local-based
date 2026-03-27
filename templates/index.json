@@ -118,6 +118,185 @@
         "padding-block-end": 60
       }
     },
+    "trust_bar_home": {
+      "type": "trust-bar",
+      "blocks": {
+        "trust_shipping": {
+          "type": "value-prop",
+          "settings": {
+            "icon_name": "truck",
+            "heading": "Livrare gratuită",
+            "description": "La comenzi peste 250 lei"
+          }
+        },
+        "trust_warranty": {
+          "type": "value-prop",
+          "settings": {
+            "icon_name": "shield",
+            "heading": "Garanție extinsă",
+            "description": "Pe toate uneltele manuale"
+          }
+        },
+        "trust_guides": {
+          "type": "value-prop",
+          "settings": {
+            "icon_name": "leaf",
+            "heading": "Ghiduri gratuite",
+            "description": "Sfaturi de grădinărit expert"
+          }
+        },
+        "trust_reviews": {
+          "type": "value-prop",
+          "settings": {
+            "icon_name": "star",
+            "heading": "Recenzii verificate",
+            "description": "Mii de clienți mulțumiți"
+          }
+        }
+      },
+      "block_order": [
+        "trust_shipping",
+        "trust_warranty",
+        "trust_guides",
+        "trust_reviews"
+      ],
+      "name": "Trust bar",
+      "settings": {
+        "heading": "",
+        "color_scheme": "scheme-2",
+        "padding_top": 40,
+        "padding_bottom": 40
+      }
+    },
+    "collection_list_home": {
+      "type": "collection-list",
+      "blocks": {
+        "group_header": {
+          "type": "group",
+          "name": "t:names.header",
+          "settings": {
+            "content_direction": "column",
+            "vertical_on_mobile": true,
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "center",
+            "horizontal_alignment_flex_direction_column": "flex-start",
+            "vertical_alignment_flex_direction_column": "center",
+            "gap": 12,
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "custom_height": 100,
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "background_media": "none",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "text_categ": {
+              "type": "text",
+              "name": "t:names.text",
+              "settings": {
+                "text": "<h3>Explorează categoriile</h3>",
+                "type_preset": "h3",
+                "font": "var(--font-primary--family)",
+                "font_size": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 16,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              }
+            }
+          },
+          "block_order": ["text_categ"]
+        },
+        "static-collection-card": {
+          "type": "_collection-card",
+          "name": "t:names.collection_card",
+          "static": true,
+          "settings": {
+            "horizontal_alignment": "flex-start",
+            "vertical_alignment": "flex-end",
+            "placement": "on_image",
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 8
+          },
+          "blocks": {
+            "collection-card-image": {
+              "type": "_collection-card-image",
+              "name": "t:names.collection_card_image",
+              "static": true,
+              "settings": {
+                "image_ratio": "square"
+              }
+            },
+            "collection-title": {
+              "type": "collection-title",
+              "name": "t:names.collection_title",
+              "settings": {
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "background": true,
+                "background_color": "#ffffff",
+                "padding-block-start": 4,
+                "padding-block-end": 4,
+                "padding-inline-start": 8,
+                "padding-inline-end": 8
+              }
+            }
+          },
+          "block_order": ["collection-card-image", "collection-title"]
+        }
+      },
+      "block_order": ["group_header"],
+      "name": "Explorează categoriile",
+      "settings": {
+        "collection_list": [],
+        "layout_type": "grid",
+        "carousel_on_mobile": true,
+        "columns": 4,
+        "mobile_columns": "2",
+        "mobile_card_size": "60cqw",
+        "columns_gap": 16,
+        "rows_gap": 16,
+        "icons_style": "arrow",
+        "icons_shape": "circle",
+        "section_width": "page-width",
+        "gap": 28,
+        "color_scheme": "scheme-1",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
     "product_list_fa6P9H": {
       "type": "product-list",
       "blocks": {
@@ -311,10 +490,61 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "testimonials_home": {
+      "type": "testimonials",
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial",
+          "settings": {
+            "rating": "5",
+            "quote": "Uneltele Stiga sunt de o calitate excepțională. Le folosesc de 3 ani și arată ca noi. Recomand cu toată inima!",
+            "author": "Maria P.",
+            "product_title": "Foarfecă de grădină Stiga",
+            "product_url": ""
+          }
+        },
+        "testimonial_2": {
+          "type": "testimonial",
+          "settings": {
+            "rating": "5",
+            "quote": "Livrarea a fost rapidă, produsele bine ambalate. Prețurile sunt corecte pentru calitatea oferită. Voi reveni cu siguranță!",
+            "author": "Ion M.",
+            "product_title": "",
+            "product_url": ""
+          }
+        },
+        "testimonial_3": {
+          "type": "testimonial",
+          "settings": {
+            "rating": "5",
+            "quote": "Ghidurile incluse sunt extrem de utile pentru un grădinar începător ca mine. Magazinul acesta a devenit preferatul meu.",
+            "author": "Alina C.",
+            "product_title": "",
+            "product_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_1",
+        "testimonial_2",
+        "testimonial_3"
+      ],
+      "name": "Testimonials",
+      "settings": {
+        "heading": "Ce spun clienții noștri",
+        "subheading": "Mii de clienți mulțumiți din întreaga țară",
+        "color_scheme": "scheme-2",
+        "padding_top": 60,
+        "padding_bottom": 60
+      }
     }
   },
   "order": [
     "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "trust_bar_home",
+    "collection_list_home",
+    "product_list_fa6P9H",
+    "testimonials_home"
   ]
 }
