@@ -11,6 +11,29 @@
   "type": "footer",
   "name": "Footer",
   "sections": {
+    "footer_onet_9fURjK": {
+      "type": "footer-onet",
+      "name": "Footer ONET",
+      "settings": {
+        "logo_width": 160,
+        "tagline": "Distribuitor autorizat STIGA în România — produse originale, garanție 2 ani, service autorizat.",
+        "nav_heading": "Navigare",
+        "nav_menu": "main-menu",
+        "contact_heading": "Contact",
+        "phone": "0700 000 000",
+        "email": "contact@magazin.ro",
+        "address": "Str. Exemplu 1, București, România",
+        "social_heading": "Certificări & Social",
+        "cert_1": "Distribuitor Autorizat",
+        "cert_2": "Service Autorizat",
+        "cert_3": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "tiktok_url": "",
+        "youtube_url": "",
+        "copyright_text": "Toate drepturile rezervate."
+      }
+    },
     "footer_utilities_jLGE8U": {
       "type": "footer-utilities",
       "blocks": {
@@ -179,6 +202,7 @@
     }
   },
   "order": [
+    "footer_onet_9fURjK",
     "footer_utilities_jLGE8U",
     "footer_j8NNE7"
   ]
