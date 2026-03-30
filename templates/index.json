@@ -124,33 +124,33 @@
         "trust_shipping": {
           "type": "value-prop",
           "settings": {
-            "icon_name": "truck",
-            "heading": "Livrare gratuită",
-            "description": "La comenzi peste 250 lei"
+            "icon_svg": "distribuitor.svg",
+            "heading": "Distribuitor Autorizat STIGA",
+            "description": "Suntem distribuitor autorizat STIGA în România — produse 100% originale, cu certificare completă."
           }
         },
         "trust_warranty": {
           "type": "value-prop",
           "settings": {
-            "icon_name": "shield",
-            "heading": "Garanție extinsă",
-            "description": "Pe toate uneltele manuale"
+            "icon_svg": "garantie.svg",
+            "heading": "Garanție 2 Ani",
+            "description": "Toate produsele beneficiază de garanție oficială STIGA de 2 ani, cu service autorizat în România."
           }
         },
         "trust_guides": {
           "type": "value-prop",
           "settings": {
-            "icon_name": "leaf",
-            "heading": "Ghiduri gratuite",
-            "description": "Sfaturi de grădinărit expert"
+            "icon_svg": "consultanta.svg",
+            "heading": "Consultanță Specializată",
+            "description": "Echipa noastră te ajută să alegi utilajul potrivit pentru suprafața și nevoile tale — gratuit, fără obligații."
           }
         },
         "trust_reviews": {
           "type": "value-prop",
           "settings": {
-            "icon_name": "star",
-            "heading": "Recenzii verificate",
-            "description": "Mii de clienți mulțumiți"
+            "icon_svg": "service-autorizat.svg",
+            "heading": "Service Autorizat",
+            "description": "Reparații, piese de schimb originale și întreținere periodică — service post-vânzare autorizat STIGA."
           }
         }
       },
@@ -162,8 +162,8 @@
       ],
       "name": "Trust bar",
       "settings": {
-        "heading": "",
-        "color_scheme": "scheme-2",
+        "heading": "De ce să ne alegi",
+        "color_scheme": "scheme-1",
         "padding_top": 40,
         "padding_bottom": 40
       }
@@ -225,7 +225,9 @@
               }
             }
           },
-          "block_order": ["text_categ"]
+          "block_order": [
+            "text_categ"
+          ]
         },
         "static-collection-card": {
           "type": "_collection-card",
@@ -274,10 +276,14 @@
               }
             }
           },
-          "block_order": ["collection-card-image", "collection-title"]
+          "block_order": [
+            "collection-title"
+          ]
         }
       },
-      "block_order": ["group_header"],
+      "block_order": [
+        "group_header"
+      ],
       "name": "Explorează categoriile",
       "settings": {
         "collection_list": [],
@@ -542,9 +548,9 @@
   },
   "order": [
     "hero_jVaWmY",
+    "product_list_fa6P9H",
     "trust_bar_home",
     "collection_list_home",
-    "product_list_fa6P9H",
     "testimonials_home"
   ]
 }

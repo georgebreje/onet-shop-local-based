@@ -1,7 +1,6 @@
 {%- comment -%}
-  Trust Bar — horizontal row of value propositions with icons.
-  Used on the homepage and any other page to build customer confidence.
-  Each block = one value prop (icon + headline + description).
+  Trust Bar — horizontal row of value propositions.
+  Editorial premium design: large decorative numbers, no icon circles.
 {%- endcomment -%}
 
 {%- if section.blocks.size > 0 -%}
@@ -21,50 +20,15 @@
   <ul class="trust-bar__list" role="list">
     {%- for block in section.blocks -%}
       {%- case block.type -%}
-
         {%- when 'value-prop' -%}
           <li class="trust-bar__item" {{ block.shopify_attributes }}>
 
-            {%- if block.settings.icon != blank -%}
-              <div class="trust-bar__icon-wrap">
-                {{ block.settings.icon | image_url: width: 64 | image_tag: loading: 'lazy', class: 'trust-bar__icon-img', alt: block.settings.heading }}
+            {%- if block.settings.icon_svg != blank -%}
+              <div class="trust-bar__custom-icon">
+                <img src="{{ block.settings.icon_svg | asset_url }}" class="trust-bar__icon-img" alt="{{ block.settings.heading }}" loading="lazy" width="44" height="44">
               </div>
             {%- else -%}
-              <div class="trust-bar__icon-wrap trust-bar__icon-wrap--svg" aria-hidden="true">
-                {%- case block.settings.icon_name -%}
-                  {%- when 'truck' -%}
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="1" y="3" width="15" height="13"></rect>
-                      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                      <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                      <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                    </svg>
-                  {%- when 'shield' -%}
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                    </svg>
-                  {%- when 'leaf' -%}
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M17 8C8 10 5.9 16.17 3.82 19.34a1 1 0 0 0 1.36 1.4C7.7 18.94 13 17 17 8z"></path>
-                      <path d="M3.41 18.41A16 16 0 0 0 8 21"></path>
-                    </svg>
-                  {%- when 'star' -%}
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                  {%- when 'refresh' -%}
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="23 4 23 10 17 10"></polyline>
-                      <polyline points="1 20 1 14 7 14"></polyline>
-                      <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
-                    </svg>
-                  {%- else -%}
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                {%- endcase -%}
-              </div>
+              <span class="trust-bar__number" aria-hidden="true">{{ forloop.index | prepend: '0' }}</span>
             {%- endif -%}
 
             <div class="trust-bar__content">
@@ -77,7 +41,6 @@
             </div>
 
           </li>
-
       {%- endcase -%}
     {%- endfor -%}
   </ul>
@@ -88,88 +51,126 @@
 
 {% stylesheet %}
 
+/* ── Section wrapper ── */
 .trust-bar {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 36px;
+  border-block-start: 1px solid var(--color-border, #E0DBD4);
+  border-block-end: 1px solid var(--color-border, #E0DBD4);
 }
 
+/* ── Heading ── */
 .trust-bar__heading {
-  font-size: 1.125rem;
-  font-weight: 700;
+  font-size: clamp(1.125rem, 0.9rem + 0.7vw, 1.375rem);
+  font-weight: 600;
   text-align: center;
   margin: 0;
+  letter-spacing: -0.015em;
+  color: var(--color-foreground-heading, #333333);
 }
 
+/* ── Item list ── */
 .trust-bar__list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 0;
 }
 
 @media screen and (min-width: 768px) {
   .trust-bar__list {
     grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
   }
 }
 
+/* ── Individual item ── */
 .trust-bar__item {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 10px;
-  padding: 20px 12px;
+  gap: 12px;
+  padding: 28px 24px;
+  border-inline-end: 1px solid var(--color-border, #E0DBD4);
+  transition: background 0.25s ease;
 }
 
-.trust-bar__icon-wrap {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
+.trust-bar__item:last-child {
+  border-inline-end: none;
+}
+
+/* mobile: remove right border on even items, add bottom border */
+@media screen and (max-width: 767px) {
+  .trust-bar__item {
+    border-inline-end: 1px solid var(--color-border, #E0DBD4);
+    border-block-end: 1px solid var(--color-border, #E0DBD4);
+  }
+  .trust-bar__item:nth-child(2n) {
+    border-inline-end: none;
+  }
+  .trust-bar__item:nth-last-child(-n+2) {
+    border-block-end: none;
+  }
+}
+
+.trust-bar__item:hover {
+  background: rgba(0,0,0,0.025);
+}
+
+/* ── Decorative number ── */
+.trust-bar__number {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--color-foreground-heading, #333333);
+  opacity: 0.12;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+/* ── Custom image icon ── */
+.trust-bar__custom-icon {
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.trust-bar__icon-wrap--svg {
-  color: var(--color-primary, #4A7C59);
-}
-
-.trust-bar__icon-wrap--svg svg {
-  width: 100%;
-  height: 100%;
 }
 
 .trust-bar__icon-img {
   width: 44px;
   height: 44px;
   object-fit: contain;
+  opacity: 1;
 }
 
+/* ── Text ── */
 .trust-bar__content {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 4px;
 }
 
 .trust-bar__title {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 700;
-  color: var(--color-foreground-heading, #2B2B2B);
+  color: var(--color-foreground-heading, #333333);
   margin: 0;
   line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
 .trust-bar__desc {
   font-size: 0.8125rem;
-  color: var(--color-foreground, #6B6B6B);
+  color: var(--color-foreground, #333333);
   margin: 0;
-  line-height: 1.5;
-  opacity: 0.75;
+  line-height: 1.6;
+  opacity: 0.55;
 }
 
 {% endstylesheet %}
@@ -184,13 +185,13 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": ""
+      "default": "De ce să ne alegi"
     },
     {
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:settings.color_scheme",
-      "default": "scheme-2"
+      "default": "scheme-1"
     },
     {
       "type": "range",
@@ -219,35 +220,22 @@
       "name": "Value proposition",
       "settings": [
         {
-          "type": "select",
-          "id": "icon_name",
-          "label": "Icon",
-          "options": [
-            { "value": "truck",   "label": "Truck (Free shipping)" },
-            { "value": "shield",  "label": "Shield (Warranty)" },
-            { "value": "leaf",    "label": "Leaf (Eco / guides)" },
-            { "value": "star",    "label": "Star (Reviews)" },
-            { "value": "refresh", "label": "Refresh (Returns)" }
-          ],
-          "default": "truck"
-        },
-        {
-          "type": "image_picker",
-          "id": "icon",
-          "label": "Custom icon image",
-          "info": "Optional — overrides the built-in SVG icon above. Recommended: 64×64px PNG."
+          "type": "text",
+          "id": "icon_svg",
+          "label": "Icon SVG filename",
+          "info": "Optional — filename from theme assets (e.g. distribuitor.svg). Dacă nu e setat, se afișează numărul decorativ."
         },
         {
           "type": "text",
           "id": "heading",
           "label": "Heading",
-          "default": "Free shipping"
+          "default": "Distribuitor Autorizat STIGA"
         },
         {
           "type": "text",
           "id": "description",
           "label": "Description",
-          "default": "On orders over 250 lei"
+          "default": "Suntem distribuitor autorizat STIGA în România — produse 100% originale, cu certificare completă."
         }
       ]
     }
@@ -259,33 +247,33 @@
         {
           "type": "value-prop",
           "settings": {
-            "icon_name": "truck",
-            "heading": "Livrare gratuită",
-            "description": "La comenzi peste 250 lei"
+            "icon_svg": "distribuitor.svg",
+            "heading": "Distribuitor Autorizat STIGA",
+            "description": "Suntem distribuitor autorizat STIGA în România — produse 100% originale, cu certificare completă."
           }
         },
         {
           "type": "value-prop",
           "settings": {
-            "icon_name": "shield",
-            "heading": "Garanție extinsă",
-            "description": "Pe toate uneltele manuale"
+            "icon_svg": "garantie.svg",
+            "heading": "Garanție 2 Ani",
+            "description": "Toate produsele beneficiază de garanție oficială STIGA de 2 ani, cu service autorizat în România."
           }
         },
         {
           "type": "value-prop",
           "settings": {
-            "icon_name": "leaf",
-            "heading": "Ghiduri gratuite",
-            "description": "Sfaturi de grădinărit expert"
+            "icon_svg": "consultanta.svg",
+            "heading": "Consultanță Specializată",
+            "description": "Echipa noastră te ajută să alegi utilajul potrivit pentru suprafața și nevoile tale — gratuit, fără obligații."
           }
         },
         {
           "type": "value-prop",
           "settings": {
-            "icon_name": "star",
-            "heading": "Recenzii verificate",
-            "description": "Mii de clienți mulțumiți"
+            "icon_svg": "service-autorizat.svg",
+            "heading": "Service Autorizat",
+            "description": "Reparații, piese de schimb originale și întreținere periodică — service post-vânzare autorizat STIGA."
           }
         }
       ]

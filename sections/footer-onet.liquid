@@ -1,0 +1,524 @@
+{%- comment -%}
+  Footer ONET — 4-column editorial footer.
+  Col 1: Logo + tagline | Col 2: Navigation | Col 3: Contact | Col 4: Social + Certifications
+{%- endcomment -%}
+
+<footer class="footer-onet" role="contentinfo">
+  <div class="footer-onet__inner section--page-width">
+
+    {%- comment -%} ── Column 1: Logo + tagline ── {%- endcomment -%}
+    <div class="footer-onet__col footer-onet__col--brand">
+      {%- if section.settings.logo != blank -%}
+        <a href="{{ routes.root_url }}" class="footer-onet__logo-link" aria-label="{{ shop.name }}">
+          <img
+            src="{{ section.settings.logo | image_url: width: 240 }}"
+            alt="{{ shop.name }}"
+            width="{{ section.settings.logo_width }}"
+            height="auto"
+            loading="lazy"
+          >
+        </a>
+      {%- else -%}
+        <a href="{{ routes.root_url }}" class="footer-onet__logo-text" aria-label="{{ shop.name }}">
+          {{ shop.name }}
+        </a>
+      {%- endif -%}
+
+      {%- if section.settings.tagline != blank -%}
+        <p class="footer-onet__tagline">{{ section.settings.tagline }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} ── Column 2: Navigation ── {%- endcomment -%}
+    {%- if section.settings.nav_menu != blank -%}
+      {%- assign nav = linklists[section.settings.nav_menu] -%}
+      {%- if nav.links.size > 0 -%}
+        <div class="footer-onet__col footer-onet__col--nav">
+          <p class="footer-onet__col-title">{{ section.settings.nav_heading | default: 'Navigare' }}</p>
+          <ul class="footer-onet__nav-list" role="list">
+            {%- for link in nav.links -%}
+              <li>
+                <a href="{{ link.url }}" class="footer-onet__nav-link"
+                  {%- if link.active %} aria-current="page"{% endif -%}>
+                  {{ link.title }}
+                </a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- comment -%} ── Column 3: Contact ── {%- endcomment -%}
+    <div class="footer-onet__col footer-onet__col--contact">
+      <p class="footer-onet__col-title">{{ section.settings.contact_heading | default: 'Contact' }}</p>
+      <ul class="footer-onet__contact-list" role="list">
+
+        {%- if section.settings.phone != blank -%}
+          <li class="footer-onet__contact-item">
+            <span class="footer-onet__contact-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 11a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .18L5 0a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L5.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+            </span>
+            <a href="tel:{{ section.settings.phone | remove: ' ' }}" class="footer-onet__contact-link">
+              {{ section.settings.phone }}
+            </a>
+          </li>
+        {%- endif -%}
+
+        {%- if section.settings.email != blank -%}
+          <li class="footer-onet__contact-item">
+            <span class="footer-onet__contact-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </span>
+            <a href="mailto:{{ section.settings.email }}" class="footer-onet__contact-link">
+              {{ section.settings.email }}
+            </a>
+          </li>
+        {%- endif -%}
+
+        {%- if section.settings.address != blank -%}
+          <li class="footer-onet__contact-item">
+            <span class="footer-onet__contact-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            <span class="footer-onet__contact-text">{{ section.settings.address }}</span>
+          </li>
+        {%- endif -%}
+
+      </ul>
+    </div>
+
+    {%- comment -%} ── Column 4: Certifications + Social ── {%- endcomment -%}
+    <div class="footer-onet__col footer-onet__col--social">
+      <p class="footer-onet__col-title">{{ section.settings.social_heading | default: 'Social' }}</p>
+
+      {%- comment -%} Certification badges ── {%- endcomment -%}
+      {%- assign has_certs = false -%}
+      {%- if section.settings.cert_1 != blank or section.settings.cert_2 != blank or section.settings.cert_3 != blank -%}
+        {%- assign has_certs = true -%}
+      {%- endif -%}
+      {%- if has_certs -%}
+        <div class="footer-onet__certs">
+          {%- if section.settings.cert_1 != blank -%}
+            <span class="footer-onet__cert-badge">{{ section.settings.cert_1 }}</span>
+          {%- endif -%}
+          {%- if section.settings.cert_2 != blank -%}
+            <span class="footer-onet__cert-badge">{{ section.settings.cert_2 }}</span>
+          {%- endif -%}
+          {%- if section.settings.cert_3 != blank -%}
+            <span class="footer-onet__cert-badge">{{ section.settings.cert_3 }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Social icons ── {%- endcomment -%}
+      <div class="footer-onet__socials">
+        {%- if section.settings.facebook_url != blank -%}
+          <a href="{{ section.settings.facebook_url }}" class="footer-onet__social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+          </a>
+        {%- endif -%}
+        {%- if section.settings.instagram_url != blank -%}
+          <a href="{{ section.settings.instagram_url }}" class="footer-onet__social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+        {%- endif -%}
+        {%- if section.settings.tiktok_url != blank -%}
+          <a href="{{ section.settings.tiktok_url }}" class="footer-onet__social-link" aria-label="TikTok" target="_blank" rel="noopener noreferrer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.29 6.29 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.78a4.85 4.85 0 01-1.01-.09z"/></svg>
+          </a>
+        {%- endif -%}
+        {%- if section.settings.youtube_url != blank -%}
+          <a href="{{ section.settings.youtube_url }}" class="footer-onet__social-link" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 001.46 6.42 29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 001.95-1.97A29 29 0 0023 12a29 29 0 00-.46-5.58zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+
+  </div>{%- comment -%} /.footer-onet__inner {%- endcomment -%}
+
+  {%- comment -%} ── Copyright bar ── {%- endcomment -%}
+  <div class="footer-onet__bottom">
+    <div class="section--page-width footer-onet__bottom-inner">
+      <p class="footer-onet__copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.copyright_text | default: 'Toate drepturile rezervate.' }}
+      </p>
+    </div>
+  </div>
+
+</footer>
+
+
+{% stylesheet %}
+
+/* ── Root vars ── */
+.footer-onet {
+  --footer-bg: #0f1923;
+  --footer-border: rgba(255, 255, 255, 0.08);
+  --footer-text: rgba(255, 255, 255, 0.55);
+  --footer-heading: #ffffff;
+  --footer-link-hover: #f4a300;
+  --footer-icon: rgba(255, 255, 255, 0.35);
+  --footer-badge-bg: rgba(255, 255, 255, 0.07);
+  --footer-badge-border: rgba(255, 255, 255, 0.15);
+  --footer-social-bg: rgba(255, 255, 255, 0.07);
+  --footer-social-hover: #f4a300;
+  --footer-bottom-bg: rgba(0, 0, 0, 0.25);
+
+  background: var(--footer-bg);
+  color: var(--footer-text);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+/* ── Inner grid ── */
+.footer-onet__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px 32px;
+  padding-block: 64px 48px;
+}
+
+@media screen and (min-width: 768px) {
+  .footer-onet__inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .footer-onet__inner {
+    grid-template-columns: 1.6fr 1fr 1.2fr 1fr;
+    gap: 0 48px;
+  }
+}
+
+/* ── Column shared ── */
+.footer-onet__col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Column title ── */
+.footer-onet__col-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--footer-heading);
+  margin: 0 0 4px;
+}
+
+/* ── Brand column ── */
+.footer-onet__logo-link {
+  display: inline-block;
+  line-height: 0;
+}
+
+.footer-onet__logo-link img {
+  max-height: 52px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footer-onet__logo-text {
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: var(--footer-heading);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.footer-onet__tagline {
+  margin: 0;
+  color: var(--footer-text);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  max-width: 280px;
+}
+
+/* ── Nav list ── */
+.footer-onet__nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-onet__nav-link {
+  color: var(--footer-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-onet__nav-link:hover,
+.footer-onet__nav-link[aria-current="page"] {
+  color: var(--footer-heading);
+}
+
+/* ── Contact list ── */
+.footer-onet__contact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.footer-onet__contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.footer-onet__contact-icon {
+  color: var(--footer-link-hover);
+  flex-shrink: 0;
+  margin-top: 1px;
+  line-height: 0;
+}
+
+.footer-onet__contact-link {
+  color: var(--footer-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-onet__contact-link:hover {
+  color: var(--footer-heading);
+}
+
+.footer-onet__contact-text {
+  color: var(--footer-text);
+}
+
+/* ── Certification badges ── */
+.footer-onet__certs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.footer-onet__cert-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border: 1px solid var(--footer-badge-border);
+  background: var(--footer-badge-bg);
+  border-radius: 100px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--footer-heading);
+  white-space: nowrap;
+}
+
+/* ── Social icons ── */
+.footer-onet__socials {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.footer-onet__social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--footer-social-bg);
+  border: 1px solid var(--footer-badge-border);
+  color: var(--footer-text);
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.footer-onet__social-link:hover {
+  background: var(--footer-social-hover);
+  border-color: var(--footer-social-hover);
+  color: #fff;
+}
+
+/* ── Copyright bar ── */
+.footer-onet__bottom {
+  border-top: 1px solid var(--footer-border);
+  background: var(--footer-bottom-bg);
+}
+
+.footer-onet__bottom-inner {
+  padding-block: 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-onet__copyright {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--footer-text);
+  text-align: center;
+}
+
+{% endstylesheet %}
+
+
+{% schema %}
+{
+  "name": "Footer ONET",
+  "tag": "section",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width (px)",
+      "min": 60,
+      "max": 300,
+      "step": 4,
+      "unit": "px",
+      "default": 160
+    },
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Tagline / descriere scurtă",
+      "default": "Distribuitor autorizat STIGA în România — produse originale, garanție 2 ani, service autorizat."
+    },
+    {
+      "type": "header",
+      "content": "Navigare"
+    },
+    {
+      "type": "text",
+      "id": "nav_heading",
+      "label": "Titlu coloană navigare",
+      "default": "Navigare"
+    },
+    {
+      "type": "link_list",
+      "id": "nav_menu",
+      "label": "Meniu navigare",
+      "default": "main-menu"
+    },
+    {
+      "type": "header",
+      "content": "Contact"
+    },
+    {
+      "type": "text",
+      "id": "contact_heading",
+      "label": "Titlu coloană contact",
+      "default": "Contact"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Telefon",
+      "default": "0700 000 000"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email",
+      "default": "contact@magazin.ro"
+    },
+    {
+      "type": "text",
+      "id": "address",
+      "label": "Adresă",
+      "default": "Str. Exemplu 1, București, România"
+    },
+    {
+      "type": "header",
+      "content": "Social & Certificări"
+    },
+    {
+      "type": "text",
+      "id": "social_heading",
+      "label": "Titlu coloană social",
+      "default": "Certificări & Social"
+    },
+    {
+      "type": "text",
+      "id": "cert_1",
+      "label": "Certificare 1",
+      "default": "Distribuitor Autorizat"
+    },
+    {
+      "type": "text",
+      "id": "cert_2",
+      "label": "Certificare 2",
+      "default": "Service Autorizat"
+    },
+    {
+      "type": "text",
+      "id": "cert_3",
+      "label": "Certificare 3",
+      "placeholder": "ex: ISO 9001"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok URL"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "header",
+      "content": "Copyright"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Text copyright",
+      "default": "Toate drepturile rezervate."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer ONET",
+      "settings": {
+        "tagline": "Distribuitor autorizat STIGA în România — produse originale, garanție 2 ani, service autorizat.",
+        "nav_heading": "Navigare",
+        "nav_menu": "main-menu",
+        "contact_heading": "Contact",
+        "phone": "0700 000 000",
+        "email": "contact@magazin.ro",
+        "address": "Str. Exemplu 1, București, România",
+        "social_heading": "Certificări & Social",
+        "cert_1": "Distribuitor Autorizat",
+        "cert_2": "Service Autorizat",
+        "copyright_text": "Toate drepturile rezervate."
+      }
+    }
+  ]
+}
+{% endschema %}
