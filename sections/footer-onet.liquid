@@ -1,12 +1,13 @@
 {%- comment -%}
   Footer ONET — 4-column editorial footer.
-  Col 1: Logo + tagline | Col 2: Navigation | Col 3: Contact | Col 4: Social + Certifications
+  Col 1: Logo + tagline + partner images | Col 2: Navigation | Col 3: Contact | Col 4: Social + Certifications
+  Bottom bar: copyright · policy links · (reserved)
 {%- endcomment -%}
 
 <footer class="footer-onet" role="contentinfo">
   <div class="footer-onet__inner">
 
-    {%- comment -%} ── Column 1: Logo + tagline ── {%- endcomment -%}
+    {%- comment -%} ── Column 1: Logo + tagline + partner images ── {%- endcomment -%}
     <div class="footer-onet__col footer-onet__col--brand">
       {%- if section.settings.logo != blank -%}
         <a href="{{ routes.root_url }}" class="footer-onet__logo-link" aria-label="{{ shop.name }}">
@@ -26,6 +27,49 @@
 
       {%- if section.settings.tagline != blank -%}
         <p class="footer-onet__tagline">{{ section.settings.tagline }}</p>
+      {%- endif -%}
+
+      {%- comment -%} ── Partner / badge images ── {%- endcomment -%}
+      {%- assign has_partner_img = false -%}
+      {%- if section.settings.partner_image_1 != blank or section.settings.partner_image_2 != blank -%}
+        {%- assign has_partner_img = true -%}
+      {%- endif -%}
+      {%- if has_partner_img -%}
+        <div class="footer-onet__partners">
+          {%- if section.settings.partner_image_1 != blank -%}
+            {%- if section.settings.partner_url_1 != blank -%}
+              <a href="{{ section.settings.partner_url_1 }}" class="footer-onet__partner-link" target="_blank" rel="noopener noreferrer" aria-label="{{ section.settings.partner_label_1 | default: 'Partner 1' }}">
+            {%- endif -%}
+            <img
+              src="{{ section.settings.partner_image_1 | image_url: width: 120 }}"
+              alt="{{ section.settings.partner_label_1 | default: 'Partner' }}"
+              class="footer-onet__partner-img"
+              loading="lazy"
+              width="60"
+              height="auto"
+            >
+            {%- if section.settings.partner_url_1 != blank -%}
+              </a>
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- if section.settings.partner_image_2 != blank -%}
+            {%- if section.settings.partner_url_2 != blank -%}
+              <a href="{{ section.settings.partner_url_2 }}" class="footer-onet__partner-link" target="_blank" rel="noopener noreferrer" aria-label="{{ section.settings.partner_label_2 | default: 'Partner 2' }}">
+            {%- endif -%}
+            <img
+              src="{{ section.settings.partner_image_2 | image_url: width: 120 }}"
+              alt="{{ section.settings.partner_label_2 | default: 'Partner' }}"
+              class="footer-onet__partner-img"
+              loading="lazy"
+              width="60"
+              height="auto"
+            >
+            {%- if section.settings.partner_url_2 != blank -%}
+              </a>
+            {%- endif -%}
+          {%- endif -%}
+        </div>
       {%- endif -%}
     </div>
 
@@ -92,7 +136,6 @@
     <div class="footer-onet__col footer-onet__col--social">
       <p class="footer-onet__col-title">{{ section.settings.social_heading | default: 'Social' }}</p>
 
-      {%- comment -%} Certification badges ── {%- endcomment -%}
       {%- assign has_certs = false -%}
       {%- if section.settings.cert_1 != blank or section.settings.cert_2 != blank or section.settings.cert_3 != blank -%}
         {%- assign has_certs = true -%}
@@ -111,7 +154,6 @@
         </div>
       {%- endif -%}
 
-      {%- comment -%} Social icons ── {%- endcomment -%}
       <div class="footer-onet__socials">
         {%- if section.settings.facebook_url != blank -%}
           <a href="{{ section.settings.facebook_url }}" class="footer-onet__social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
@@ -136,14 +178,26 @@
       </div>
     </div>
 
-  </div>{%- comment -%} /.footer-onet__inner {%- endcomment -%}
+  </div>
 
-  {%- comment -%} ── Copyright bar ── {%- endcomment -%}
+  {%- comment -%} ── Bottom bar: copyright · policies ── {%- endcomment -%}
   <div class="footer-onet__bottom">
     <div class="footer-onet__bottom-inner">
+
       <p class="footer-onet__copyright">
         &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.copyright_text | default: 'Toate drepturile rezervate.' }}
       </p>
+
+      {%- if shop.policies.size > 0 -%}
+        <ul class="footer-onet__policy-list" role="list">
+          {%- for policy in shop.policies -%}
+            {%- if policy != blank -%}
+              <li><a href="{{ policy.url }}" class="footer-onet__policy-link">{{ policy.title | escape }}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
     </div>
   </div>
 
@@ -159,7 +213,6 @@
   --footer-text: rgba(255, 255, 255, 0.55);
   --footer-heading: #ffffff;
   --footer-link-hover: #f4a300;
-  --footer-icon: rgba(255, 255, 255, 0.35);
   --footer-badge-bg: rgba(255, 255, 255, 0.07);
   --footer-badge-border: rgba(255, 255, 255, 0.15);
   --footer-social-bg: rgba(255, 255, 255, 0.07);
@@ -240,6 +293,41 @@
   font-size: 0.875rem;
   line-height: 1.7;
   max-width: 280px;
+}
+
+/* ── Partner images ── */
+.footer-onet__partners {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.footer-onet__partner-link {
+  display: inline-block;
+  line-height: 0;
+  border-radius: 6px;
+  transition: opacity 0.2s ease;
+}
+
+.footer-onet__partner-link:hover {
+  opacity: 0.8;
+}
+
+.footer-onet__partner-img {
+  height: 36px;
+  width: auto;
+  max-width: 80px;
+  object-fit: contain;
+  opacity: 0.75;
+  filter: brightness(0) invert(1);
+  transition: opacity 0.2s ease;
+}
+
+.footer-onet__partner-link:hover .footer-onet__partner-img,
+.footer-onet__partner-img:not(:has(~ *)) {
+  opacity: 0.9;
 }
 
 /* ── Nav list ── */
@@ -348,7 +436,7 @@
   color: #fff;
 }
 
-/* ── Copyright bar ── */
+/* ── Bottom bar ── */
 .footer-onet__bottom {
   border-top: 1px solid var(--footer-border);
   background: var(--footer-bottom-bg);
@@ -361,14 +449,57 @@
   margin-inline: auto;
   box-sizing: border-box;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .footer-onet__bottom-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    gap: 16px;
+  }
 }
 
 .footer-onet__copyright {
   margin: 0;
   font-size: 0.8125rem;
   color: var(--footer-text);
-  text-align: center;
+  white-space: nowrap;
+}
+
+/* ── Policy links ── */
+.footer-onet__policy-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 0;
+}
+
+.footer-onet__policy-list li + li::before {
+  content: '·';
+  padding-inline: 8px;
+  color: var(--footer-text);
+  opacity: 0.4;
+}
+
+.footer-onet__policy-link {
+  font-size: 0.8125rem;
+  color: var(--footer-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.footer-onet__policy-link:hover {
+  color: var(--footer-heading);
 }
 
 {% endstylesheet %}
@@ -406,6 +537,42 @@
       "id": "tagline",
       "label": "Tagline / descriere scurtă",
       "default": "Distribuitor autorizat STIGA în România — produse originale, garanție 2 ani, service autorizat."
+    },
+    {
+      "type": "header",
+      "content": "Imagini parteneri / badge-uri"
+    },
+    {
+      "type": "image_picker",
+      "id": "partner_image_1",
+      "label": "Imagine 1"
+    },
+    {
+      "type": "url",
+      "id": "partner_url_1",
+      "label": "Link imagine 1"
+    },
+    {
+      "type": "text",
+      "id": "partner_label_1",
+      "label": "Alt text imagine 1",
+      "default": "Partner 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "partner_image_2",
+      "label": "Imagine 2"
+    },
+    {
+      "type": "url",
+      "id": "partner_url_2",
+      "label": "Link imagine 2"
+    },
+    {
+      "type": "text",
+      "id": "partner_label_2",
+      "label": "Alt text imagine 2",
+      "default": "Partner 2"
     },
     {
       "type": "header",
