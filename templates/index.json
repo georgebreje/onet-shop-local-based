@@ -524,61 +524,12 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
-    },
-    "testimonials_home": {
-      "type": "testimonials",
-      "blocks": {
-        "testimonial_1": {
-          "type": "testimonial",
-          "settings": {
-            "rating": "5",
-            "quote": "Uneltele Stiga sunt de o calitate excepțională. Le folosesc de 3 ani și arată ca noi. Recomand cu toată inima!",
-            "author": "Maria P.",
-            "product_title": "Foarfecă de grădină Stiga",
-            "product_url": ""
-          }
-        },
-        "testimonial_2": {
-          "type": "testimonial",
-          "settings": {
-            "rating": "5",
-            "quote": "Livrarea a fost rapidă, produsele bine ambalate. Prețurile sunt corecte pentru calitatea oferită. Voi reveni cu siguranță!",
-            "author": "Ion M.",
-            "product_title": "",
-            "product_url": ""
-          }
-        },
-        "testimonial_3": {
-          "type": "testimonial",
-          "settings": {
-            "rating": "5",
-            "quote": "Ghidurile incluse sunt extrem de utile pentru un grădinar începător ca mine. Magazinul acesta a devenit preferatul meu.",
-            "author": "Alina C.",
-            "product_title": "",
-            "product_url": ""
-          }
-        }
-      },
-      "block_order": [
-        "testimonial_1",
-        "testimonial_2",
-        "testimonial_3"
-      ],
-      "name": "Testimonials",
-      "settings": {
-        "heading": "Ce spun clienții noștri",
-        "subheading": "Mii de clienți mulțumiți din întreaga țară",
-        "color_scheme": "scheme-2",
-        "padding_top": 60,
-        "padding_bottom": 60
-      }
     }
   },
   "order": [
     "hero_jVaWmY",
     "product_list_fa6P9H",
     "trust_bar_home",
-    "collection_list_home",
-    "testimonials_home"
+    "collection_list_home"
   ]
 }
