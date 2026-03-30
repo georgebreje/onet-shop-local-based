@@ -4,7 +4,7 @@
 {%- endcomment -%}
 
 <footer class="footer-onet" role="contentinfo">
-  <div class="footer-onet__inner section--page-width">
+  <div class="footer-onet__inner">
 
     {%- comment -%} ── Column 1: Logo + tagline ── {%- endcomment -%}
     <div class="footer-onet__col footer-onet__col--brand">
@@ -140,7 +140,7 @@
 
   {%- comment -%} ── Copyright bar ── {%- endcomment -%}
   <div class="footer-onet__bottom">
-    <div class="section--page-width footer-onet__bottom-inner">
+    <div class="footer-onet__bottom-inner">
       <p class="footer-onet__copyright">
         &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.copyright_text | default: 'Toate drepturile rezervate.' }}
       </p>
@@ -178,6 +178,10 @@
   grid-template-columns: 1fr;
   gap: 40px 32px;
   padding-block: 64px 48px;
+  max-width: var(--page-width, 1200px);
+  margin-inline: auto;
+  padding-inline: var(--page-margin, 24px);
+  box-sizing: border-box;
 }
 
 @media screen and (min-width: 768px) {
@@ -352,6 +356,10 @@
 
 .footer-onet__bottom-inner {
   padding-block: 18px;
+  padding-inline: var(--page-margin, 24px);
+  max-width: var(--page-width, 1200px);
+  margin-inline: auto;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
 }
