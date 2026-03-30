@@ -1,0 +1,10 @@
+/*
+ * ONET brand overrides — supplements base.css
+ * Prevents the primary accent colour (#f4a300) from bleeding into
+ * product card title/price links that should use the foreground colour.
+ */
+
+/* Product title links use display:contents — let them inherit the card's text colour */
+a.contents {
+  color: inherit;
+}
