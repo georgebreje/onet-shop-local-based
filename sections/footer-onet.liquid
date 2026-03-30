@@ -1,13 +1,13 @@
 {%- comment -%}
   Footer ONET — 4-column editorial footer.
-  Col 1: Logo + tagline + partner images | Col 2: Navigation | Col 3: Contact | Col 4: Social + Certifications
-  Bottom bar: copyright · policy links · (reserved)
+  Col 1: Logo + tagline | Col 2: Navigation | Col 3: Contact | Col 4: Social + Certifications
+  Bottom bar: copyright · policy links · ANPC/SOL compliance badges
 {%- endcomment -%}
 
 <footer class="footer-onet" role="contentinfo">
   <div class="footer-onet__inner">
 
-    {%- comment -%} ── Column 1: Logo + tagline + partner images ── {%- endcomment -%}
+    {%- comment -%} ── Column 1: Logo + tagline ── {%- endcomment -%}
     <div class="footer-onet__col footer-onet__col--brand">
       {%- if section.settings.logo != blank -%}
         <a href="{{ routes.root_url }}" class="footer-onet__logo-link" aria-label="{{ shop.name }}">
@@ -27,49 +27,6 @@
 
       {%- if section.settings.tagline != blank -%}
         <p class="footer-onet__tagline">{{ section.settings.tagline }}</p>
-      {%- endif -%}
-
-      {%- comment -%} ── Partner / badge images ── {%- endcomment -%}
-      {%- assign has_partner_img = false -%}
-      {%- if section.settings.partner_image_1 != blank or section.settings.partner_image_2 != blank -%}
-        {%- assign has_partner_img = true -%}
-      {%- endif -%}
-      {%- if has_partner_img -%}
-        <div class="footer-onet__partners">
-          {%- if section.settings.partner_image_1 != blank -%}
-            {%- if section.settings.partner_url_1 != blank -%}
-              <a href="{{ section.settings.partner_url_1 }}" class="footer-onet__partner-link" target="_blank" rel="noopener noreferrer" aria-label="{{ section.settings.partner_label_1 | default: 'Partner 1' }}">
-            {%- endif -%}
-            <img
-              src="{{ section.settings.partner_image_1 | image_url: width: 120 }}"
-              alt="{{ section.settings.partner_label_1 | default: 'Partner' }}"
-              class="footer-onet__partner-img"
-              loading="lazy"
-              width="60"
-              height="auto"
-            >
-            {%- if section.settings.partner_url_1 != blank -%}
-              </a>
-            {%- endif -%}
-          {%- endif -%}
-
-          {%- if section.settings.partner_image_2 != blank -%}
-            {%- if section.settings.partner_url_2 != blank -%}
-              <a href="{{ section.settings.partner_url_2 }}" class="footer-onet__partner-link" target="_blank" rel="noopener noreferrer" aria-label="{{ section.settings.partner_label_2 | default: 'Partner 2' }}">
-            {%- endif -%}
-            <img
-              src="{{ section.settings.partner_image_2 | image_url: width: 120 }}"
-              alt="{{ section.settings.partner_label_2 | default: 'Partner' }}"
-              class="footer-onet__partner-img"
-              loading="lazy"
-              width="60"
-              height="auto"
-            >
-            {%- if section.settings.partner_url_2 != blank -%}
-              </a>
-            {%- endif -%}
-          {%- endif -%}
-        </div>
       {%- endif -%}
     </div>
 
@@ -180,7 +137,7 @@
 
   </div>
 
-  {%- comment -%} ── Bottom bar: copyright · policies ── {%- endcomment -%}
+  {%- comment -%} ── Bottom bar: copyright · policies · ANPC badges ── {%- endcomment -%}
   <div class="footer-onet__bottom">
     <div class="footer-onet__bottom-inner">
 
@@ -196,6 +153,40 @@
             {%- endif -%}
           {%- endfor -%}
         </ul>
+      {%- endif -%}
+
+      {%- comment -%} ANPC / SOL compliance badges ── {%- endcomment -%}
+      {%- assign has_compliance = false -%}
+      {%- if section.settings.compliance_image_1 != blank or section.settings.compliance_image_2 != blank -%}
+        {%- assign has_compliance = true -%}
+      {%- endif -%}
+      {%- if has_compliance -%}
+        <div class="footer-onet__compliance">
+          {%- if section.settings.compliance_image_1 != blank -%}
+            <a href="{{ section.settings.compliance_url_1 }}" class="footer-onet__compliance-link" target="_blank" rel="noopener noreferrer" aria-label="{{ section.settings.compliance_label_1 | default: 'SAL' }}">
+              <img
+                src="{{ section.settings.compliance_image_1 | image_url: width: 200 }}"
+                alt="{{ section.settings.compliance_label_1 | default: 'SAL' }}"
+                class="footer-onet__compliance-img"
+                loading="lazy"
+                width="100"
+                height="auto"
+              >
+            </a>
+          {%- endif -%}
+          {%- if section.settings.compliance_image_2 != blank -%}
+            <a href="{{ section.settings.compliance_url_2 }}" class="footer-onet__compliance-link" target="_blank" rel="noopener noreferrer" aria-label="{{ section.settings.compliance_label_2 | default: 'SOL' }}">
+              <img
+                src="{{ section.settings.compliance_image_2 | image_url: width: 200 }}"
+                alt="{{ section.settings.compliance_label_2 | default: 'SOL' }}"
+                class="footer-onet__compliance-img"
+                loading="lazy"
+                width="100"
+                height="auto"
+              >
+            </a>
+          {%- endif -%}
+        </div>
       {%- endif -%}
 
     </div>
@@ -293,41 +284,6 @@
   font-size: 0.875rem;
   line-height: 1.7;
   max-width: 280px;
-}
-
-/* ── Partner images ── */
-.footer-onet__partners {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 4px;
-}
-
-.footer-onet__partner-link {
-  display: inline-block;
-  line-height: 0;
-  border-radius: 6px;
-  transition: opacity 0.2s ease;
-}
-
-.footer-onet__partner-link:hover {
-  opacity: 0.8;
-}
-
-.footer-onet__partner-img {
-  height: 36px;
-  width: auto;
-  max-width: 80px;
-  object-fit: contain;
-  opacity: 0.75;
-  filter: brightness(0) invert(1);
-  transition: opacity 0.2s ease;
-}
-
-.footer-onet__partner-link:hover .footer-onet__partner-img,
-.footer-onet__partner-img:not(:has(~ *)) {
-  opacity: 0.9;
 }
 
 /* ── Nav list ── */
@@ -443,7 +399,7 @@
 }
 
 .footer-onet__bottom-inner {
-  padding-block: 18px;
+  padding-block: 16px;
   padding-inline: var(--page-margin, 24px);
   max-width: var(--page-width, 1200px);
   margin-inline: auto;
@@ -451,7 +407,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-align: center;
 }
 
@@ -502,6 +458,31 @@
   color: var(--footer-heading);
 }
 
+/* ── ANPC / SOL compliance badges ── */
+.footer-onet__compliance {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.footer-onet__compliance-link {
+  display: inline-block;
+  line-height: 0;
+  transition: opacity 0.2s ease;
+}
+
+.footer-onet__compliance-link:hover {
+  opacity: 0.75;
+}
+
+.footer-onet__compliance-img {
+  height: 38px;
+  width: auto;
+  max-width: 100px;
+  object-fit: contain;
+}
+
 {% endstylesheet %}
 
 
@@ -537,42 +518,6 @@
       "id": "tagline",
       "label": "Tagline / descriere scurtă",
       "default": "Distribuitor autorizat STIGA în România — produse originale, garanție 2 ani, service autorizat."
-    },
-    {
-      "type": "header",
-      "content": "Imagini parteneri / badge-uri"
-    },
-    {
-      "type": "image_picker",
-      "id": "partner_image_1",
-      "label": "Imagine 1"
-    },
-    {
-      "type": "url",
-      "id": "partner_url_1",
-      "label": "Link imagine 1"
-    },
-    {
-      "type": "text",
-      "id": "partner_label_1",
-      "label": "Alt text imagine 1",
-      "default": "Partner 1"
-    },
-    {
-      "type": "image_picker",
-      "id": "partner_image_2",
-      "label": "Imagine 2"
-    },
-    {
-      "type": "url",
-      "id": "partner_url_2",
-      "label": "Link imagine 2"
-    },
-    {
-      "type": "text",
-      "id": "partner_label_2",
-      "label": "Alt text imagine 2",
-      "default": "Partner 2"
     },
     {
       "type": "header",
@@ -665,6 +610,42 @@
       "type": "url",
       "id": "youtube_url",
       "label": "YouTube URL"
+    },
+    {
+      "type": "header",
+      "content": "Badge-uri conformitate (ANPC / SOL)"
+    },
+    {
+      "type": "image_picker",
+      "id": "compliance_image_1",
+      "label": "Badge imagine 1 (SAL/ANPC)"
+    },
+    {
+      "type": "url",
+      "id": "compliance_url_1",
+      "label": "Link badge 1"
+    },
+    {
+      "type": "text",
+      "id": "compliance_label_1",
+      "label": "Alt text badge 1",
+      "default": "SAL - Soluționarea Alternativă a Litigiilor"
+    },
+    {
+      "type": "image_picker",
+      "id": "compliance_image_2",
+      "label": "Badge imagine 2 (SOL)"
+    },
+    {
+      "type": "url",
+      "id": "compliance_url_2",
+      "label": "Link badge 2"
+    },
+    {
+      "type": "text",
+      "id": "compliance_label_2",
+      "label": "Alt text badge 2",
+      "default": "SOL - Soluționarea Online a Litigiilor"
     },
     {
       "type": "header",
