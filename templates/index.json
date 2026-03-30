@@ -506,7 +506,12 @@
       ],
       "name": "Explorează categoriile",
       "settings": {
-        "collection_list": [],
+        "collection_list": [
+          "maini-de-tuns-gazon-100",
+          "tractorae-de-tuns-gazon-83",
+          "roboi-de-tuns-gazon-129",
+          "accesorii-85"
+        ],
         "layout_type": "grid",
         "carousel_on_mobile": true,
         "columns": 4,
