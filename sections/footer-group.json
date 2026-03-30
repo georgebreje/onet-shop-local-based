@@ -17,6 +17,10 @@
       "settings": {
         "logo_width": 160,
         "tagline": "Distribuitor autorizat STIGA în România — produse originale, garanție 2 ani, service autorizat.",
+        "partner_url_1": "",
+        "partner_label_1": "Partner 1",
+        "partner_url_2": "",
+        "partner_label_2": "Partner 2",
         "nav_heading": "Navigare",
         "nav_menu": "main-menu",
         "contact_heading": "Contact",
@@ -32,61 +36,6 @@
         "tiktok_url": "",
         "youtube_url": "",
         "copyright_text": "Toate drepturile rezervate."
-      }
-    },
-    "footer_utilities_jLGE8U": {
-      "type": "footer-utilities",
-      "blocks": {
-        "footer_copyright_jweRK8": {
-          "type": "footer-copyright",
-          "settings": {
-            "show_powered_by": false,
-            "font_size": "0.75rem",
-            "case": "none"
-          },
-          "blocks": {}
-        },
-        "footer_policy_list_VCdnpa": {
-          "type": "footer-policy-list",
-          "settings": {
-            "font_size": "0.75rem",
-            "case": "none"
-          },
-          "blocks": {}
-        },
-        "social_links_Ew63Kq": {
-          "type": "social-links",
-          "settings": {
-            "facebook_url": "https://www.facebook.com/",
-            "instagram_url": "https://www.instagram.com/",
-            "youtube_url": "https://www.youtube.com/",
-            "tiktok_url": "https://www.tiktok.com/",
-            "twitter_url": "https://x.com/",
-            "threads_url": "",
-            "linkedin_url": "",
-            "bluesky_url": "",
-            "snapchat_url": "",
-            "pinterest_url": "",
-            "tumblr_url": "",
-            "vimeo_url": "",
-            "custom_url": ""
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "footer_copyright_jweRK8",
-        "footer_policy_list_VCdnpa",
-        "social_links_Ew63Kq"
-      ],
-      "name": "t:names.utilities",
-      "settings": {
-        "section_width": "page-width",
-        "gap": 24,
-        "divider_thickness": 0,
-        "color_scheme": "",
-        "padding-block-start": 20,
-        "padding-block-end": 48
       }
     },
     "footer_j8NNE7": {
@@ -203,7 +152,6 @@
   },
   "order": [
     "footer_onet_9fURjK",
-    "footer_utilities_jLGE8U",
     "footer_j8NNE7"
   ]
 }
